@@ -1,7 +1,9 @@
 <?php
 
+use App\Classes\Account;
+use App\Http\Controllers\AccountController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +17,11 @@ use Illuminate\Support\Str;
 */
 
 Route::get('/', function () {
+    dd(Account::$accountModel->usersStatus1->toArray());
+
     return view('welcome');
 });
 
-Route::get('/account/get-temporary-token', function () {
-    $tempToken = \App\Classes\Account::generateTempToken();
+Route::get('/account/get-temporary-token', [AccountController::class, 'getTempToken'])->name('account.get-temporary-token');
+Route::get('/account/has-coming-request', [AccountController::class, 'hasComingRequest'])->name('account.has-coming-request');
 
-    return response()->json(['tempToken' => $tempToken]);
-})->name('account.get-temporary-token');
