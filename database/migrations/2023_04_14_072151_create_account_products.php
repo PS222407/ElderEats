@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('account_products', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('account_id')->constrained();
             $table->foreignId('product_id')->constrained();
             $table->date('expiration_date');
-            $table->timestamp('ran_out_at');
+            $table->dateTime('ran_out_at')->nullable();
         });
     }
 

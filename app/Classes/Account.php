@@ -26,10 +26,10 @@ class Account
         $accountModel = AccountModel::firstWhere('token', $_COOKIE['account_token'] ?? null);
 
         if (isset($_COOKIE['account_token']) && $accountModel) {
-            setcookie('account_token', $accountModel->token, time() + (86400 * 400));
-        } elseif ((isset($_COOKIE['account_token']) && !$accountModel || !isset($_COOKIE['account_token']))) {
+            setcookie('account_token', $accountModel->token, time() + (86400 * 400), '/');
+        } elseif (((isset($_COOKIE['account_token']) && !$accountModel) || !isset($_COOKIE['account_token']))) {
             $token = Str::uuid();
-            setcookie('account_token', $token, time() + (86400 * 400));
+            setcookie('account_token', $token, time() + (86400 * 400), '/');
             $accountModel = AccountModel::create([
                 'token' => $token,
             ]);

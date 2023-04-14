@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fixed_products', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('product_id')->constrained();
             $table->foreignId('account_id')->constrained();
             $table->boolean('is_active');

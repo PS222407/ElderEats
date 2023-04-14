@@ -1,53 +1,79 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-    <title>Laravel</title>
+@section('content')
+    <div class="flex flex-col mx-auto text-2xl">
+        <button onclick="showCode()" class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 p-2 rounded text-white font-bold">Show code</button>
+        <div id="display-code" class="text-center"></div>
+    </div>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="antialiased">
-<div class="flex flex-col mx-auto text-2xl">
-    <button onclick="showCode()"
-            class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 p-2 rounded text-white font-bold">Show code
-    </button>
-    <div id="display-code" class="text-center"></div>
-</div>
+    <script>
+        let timeoutArray = [];
 
-<script>
-    async function showCode() {
-        document.getElementById('display-code').innerHTML = await getCode();
-    }
-
-    async function getCode() {
-        const response = await fetch("{{ route('account.get-temporary-token') }}");
-        const jsonData = await response.json();
-
-        return jsonData.tempToken;
-    }
-
-    checkForIncomingCode();
-    function checkForIncomingCode() {
-        const minutes = 10;
-        const intervalSeconds = 5;
-
-        for (let i = 0; i < minutes * 10 / intervalSeconds; i++) {
-            setTimeout(function () {
-                checkIncomingCodeInDatabase();
-            }, intervalSeconds * 1000 * i);
+        async function showCode() {
+            document.getElementById('display-code').innerHTML = await getCode();
+            waitForIncomingToken();
         }
-    }
 
-    async function checkIncomingCodeInDatabase() {
-        console.log('check for incoming');
+        function hideCode() {
+            document.getElementById('display-code').innerHTML = '';
+        }
 
-        const response = await fetch("{{ route('account.has-coming-request') }}");
-        const jsonData = await response.json();
+        async function getCode() {
+            const response = await fetch("{{ route('account.get-temporary-token') }}");
+            const jsonData = await response.json();
 
-        console.log(jsonData.userName);
-    }
-</script>
-</body>
-</html>
+            return jsonData.tempToken;
+        }
+
+        function waitForIncomingToken() {
+            const minutes = 10;
+            const intervalSeconds = 5;
+
+            for (let i = 0; i < minutes * 10 / intervalSeconds; i++) {
+                let timeout = setTimeout(function () {
+                    checkIncomingCodeInDatabase();
+                }, intervalSeconds * 1000 * i);
+
+                timeoutArray.push(timeout);
+            }
+        }
+
+        async function checkIncomingCodeInDatabase() {
+            const response = await fetch("{{ route('account.has-coming-request') }}");
+            const jsonData = await response.json();
+
+            if (jsonData.status === 'success') {
+                requestIncomingFromUser(jsonData.userName, jsonData.userId);
+            }
+        }
+
+        function requestIncomingFromUser(userName, userId) {
+            stopTimeouts();
+            let isConfirmed = confirm(userName + ' wil verbinding maken. Klik op OK om toe te staan');
+            acceptOrDenyUser(isConfirmed, userId);
+        }
+
+        function stopTimeouts() {
+            for (let i = 0; i < timeoutArray.length; i++) {
+                clearTimeout(timeoutArray[i]);
+            }
+        }
+
+        async function acceptOrDenyUser(isConfirmed, userId) {
+            console.log(isConfirmed, userId)
+            axios.post("{{ route('account.accept-or-deny-user') }}", {
+                isConfirmed: isConfirmed,
+                userId: userId
+            }).then(function (response) {
+                let jsonData = response.data;
+
+                if (jsonData.status === 'success') {
+                    hideCode();
+                    alert(jsonData.message);
+                }
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
+    </script>
+@endsection

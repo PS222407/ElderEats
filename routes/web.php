@@ -1,8 +1,7 @@
 <?php
 
-use App\Classes\Account;
 use App\Http\Controllers\AccountController;
-use App\Models\User;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,4 +19,10 @@ Route::view('/', 'welcome');
 
 Route::get('/account/get-temporary-token', [AccountController::class, 'getTempToken'])->name('account.get-temporary-token');
 Route::get('/account/has-coming-request', [AccountController::class, 'hasComingRequest'])->name('account.has-coming-request');
+Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOrDenyUser'])->name('account.accept-or-deny-user');
 
+Route::get('/test', function () {
+   return view('test', [
+       'products' => \App\Classes\Account::$accountModel->products,
+   ]);
+});

@@ -26,4 +26,9 @@ class Account extends Model
     {
         return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', ConnectionStatus::IN_PROCESS);
     }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'account_products');
+    }
 }
