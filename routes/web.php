@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/account/get-temporary-token', function () {
+    $tempToken = \App\Classes\Account::generateTempToken();
+
+    return response()->json(['tempToken' => $tempToken]);
+})->name('account.get-temporary-token');

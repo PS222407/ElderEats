@@ -4,7 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
+use App\Classes\Account as AccountFacade;
 
 class Account
 {
@@ -15,7 +17,16 @@ class Account
      */
     public function handle(Request $request, Closure $next): Response
     {
-        \App\Classes\Account::extendCookie();
+//        if (!AccountFacade::check()) {
+//            $token = Str::uuid();
+//
+//            AccountFacade::register($token);
+//            AccountFacade::login($token);
+//        }
+//
+//        AccountFacade::extendCookie();
+
+        AccountFacade::refresh();
 
         return $next($request);
     }

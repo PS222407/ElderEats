@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accounts', function (Blueprint $table) {
-            $table->id();
-            $table->string('token');
-            $table->string('temporary_token')->nullable();
-            $table->timestamp('temporary_token_expires_at');
-            $table->timestamps();
+        Schema::create('account_users', function (Blueprint $table) {
+            $table->foreignId('account_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->integer('status');
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('account_users');
     }
 };
