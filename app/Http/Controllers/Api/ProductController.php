@@ -31,11 +31,11 @@ class ProductController extends Controller
                 'barcode' => $request->barcode,
                 'image' => $json['product']['image_url'],
             ], [
-                'expiration_date' => now(),
+                'expiration_date' => now(), //TODO: change to expiration date
             ]);
         } else {
             $accountProducts->attach($product, [
-                'expiration_date' => now(),
+                'expiration_date' => now(), //TODO: change to expiration date
             ]);
         }
 
