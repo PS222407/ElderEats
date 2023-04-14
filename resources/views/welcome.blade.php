@@ -46,7 +46,7 @@
         const response = await fetch("{{ route('account.has-coming-request') }}");
         const jsonData = await response.json();
 
-        console.log('')
+        console.log(jsonData.userName);
     }
 </script>
 </body>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ConnectionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,8 +22,8 @@ class Account extends Model
         return $this->belongsToMany(User::class, 'account_users');
     }
 
-    public function usersStatus1()
+    public function usersInProcess(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', 1);
+        return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', ConnectionStatus::IN_PROCESS);
     }
 }

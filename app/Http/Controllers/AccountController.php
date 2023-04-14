@@ -12,11 +12,18 @@ class AccountController extends Controller
     {
         $tempToken = Account::generateTempToken();
 
-        return response()->json(['tempToken' => $tempToken]);
+        return response()->json([
+            'tempToken' => $tempToken
+        ]);
     }
 
     public function hasComingRequest()
     {
+        $usersInProcess = Account::$accountModel->usersInProcess;
+        $user = $usersInProcess->last();
 
+        return response()->json([
+            'userName' => $user->name,
+        ]);
     }
 }
