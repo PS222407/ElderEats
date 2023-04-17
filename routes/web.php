@@ -25,3 +25,10 @@ Route::get('/test', function () {
        'products' => \App\Classes\Account::$accountModel->products,
    ]);
 });
+
+Route::get('/push', function () {
+    \App\Events\TestEvent::dispatch();
+});
+Route::get('/receive', function () {
+   return view('receive');
+});

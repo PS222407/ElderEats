@@ -32,11 +32,11 @@ class ProductController extends Controller
                 'barcode' => $request->barcode,
                 'image' => $json['product']['image_url'],
             ], [
-                'expiration_date' => now(), //TODO: change to expiration date
+//                'expiration_date' => now(), //TODO: change to expiration date
             ]);
         } else {
             $accountProducts->attach($product, [
-                'expiration_date' => now(), //TODO: change to expiration date
+//                'expiration_date' => now(), //TODO: change to expiration date
             ]);
         }
 
@@ -50,8 +50,8 @@ class ProductController extends Controller
             return response()->json(['status' => 'failed', 'message' => 'product not found']);
         }
 
-        $account = Account::firstWhere('token', $request->account_token);
-        $relatedProducts = $account->products()->withPivot(['id'])->where('product_id', $product->id)->get();
+        $products = Account::firstWhere('token', $request->account_token)->products()->withPivot(['id'])->where('product_id', $product->id)->get();
+        dd($products->toArray());
 
         $product = DB::table('account_products')->find(4);
         dd($product, $product->id, $product->expiration_date);
