@@ -1,13 +1,26 @@
 import './bootstrap';
+import Swal from 'sweetalert2';
+import 'flowbite';
 
 const account = document.querySelector('meta[name="account"]').content;
 const DETACH_PRODUCT_URL = "/account/product";
 
-Echo.channel('my-channel-test')
-    .listen('.my-event-test', (e) => {
-        console.log('event fired');
-        alert('event fired');
-    });
+// set the modal menu element
+const $targetEl = document.getElementById('modalEl');
+
+// options with default values
+const options = {
+    backdrop: 'static',
+    backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
+    closable: true,
+};
+const modal = new Modal($targetEl, options);
+
+document.getElementById('close-delete-products-button').addEventListener('click', function () {
+   modal.hide();
+});document.getElementById('close-delete-products-button2').addEventListener('click', function () {
+   modal.hide();
+});
 
 Echo.channel('product-scanned-channel-'+ account)
     .listen('.add-product', (e) => {
@@ -41,7 +54,8 @@ Echo.channel('product-scanned-channel-'+ account)
             // container.appendChild(link);
             container.appendChild(form);
 
-            document.getElementById('deleted-products-list').appendChild(container);
+            list.appendChild(container);
+            modal.show();
         }
     });
 
@@ -50,28 +64,40 @@ function createDeleteProductForm(id) {
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = DETACH_PRODUCT_URL;
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const inputMethod = document.createElement('input');
+    inputMethod.type = 'hidden';
+    inputMethod.name = '_method';
+    inputMethod.value = 'DELETE';
+    const inputToken = document.createElement('input');
+    inputToken.type = 'hidden';
+    inputToken.name = '_token';
+    inputToken.value = csrfToken;
+    const inputPivotId = document.createElement('input');
+    inputPivotId.type = 'hidden';
+    inputPivotId.name = 'pivot_id';
+    inputPivotId.value = id;
+    form.appendChild(inputMethod);
+    form.appendChild(inputToken);
+    form.appendChild(inputPivotId);
+
     form.addEventListener('submit', (event) => {
         event.preventDefault(); // prevent the default form submission behavior
-        const confirmDelete = confirm('Weet u zeker dat u dit wilt verwijderen?'); // ask for confirmation
-        if (confirmDelete) {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const inputMethod = document.createElement('input');
-            inputMethod.type = 'hidden';
-            inputMethod.name = '_method';
-            inputMethod.value = 'DELETE';
-            const inputToken = document.createElement('input');
-            inputToken.type = 'hidden';
-            inputToken.name = '_token';
-            inputToken.value = csrfToken;
-            const inputPivotId = document.createElement('input');
-            inputPivotId.type = 'hidden';
-            inputPivotId.name = 'pivot_id';
-            inputPivotId.value = id;
-            form.appendChild(inputMethod);
-            form.appendChild(inputToken);
-            form.appendChild(inputPivotId);
-            form.submit(); // submit the form
-        }
+
+        Swal.fire({
+            title: 'Verwijderen?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'JA',
+            cancelButtonText: "nee",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // submit the form
+            }
+        })
     });
 
     // Create a delete button element

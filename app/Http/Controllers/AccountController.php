@@ -66,7 +66,14 @@ class AccountController extends Controller
 
     public function detachProduct(Request $request)
     {
-        dd($request->all());
-//        $product = DB::table('account_products')->find(4);
+        $accountProductPivots = Account::$accountModel->products()->withPivot(['id'])->get()->pluck('pivot.id')->toArray();
+        $pivotId = (int)$request->pivot_id;
+        $authorized = in_array($pivotId, $accountProductPivots);
+
+        if ($authorized) {
+            DB::table('account_products')->where('id', $pivotId)->delete();
+        }
+
+        return redirect()->route('welcome');
     }
 }
