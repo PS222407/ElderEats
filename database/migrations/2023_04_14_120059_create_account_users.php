@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('account_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->integer('status')->default(ConnectionStatus::INACTIVE->value);
+            $table->timestamps();
         });
     }
 

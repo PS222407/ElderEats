@@ -20,4 +20,4 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::post('/v1/product', [ProductController::class, 'store'])->name('product.store')->middleware('account.exists');
-Route::delete('/v1/product', [ProductController::class, 'store'])->name('product.store')->middleware('account.exists');
+Route::delete('/v1/product', [ProductController::class, 'destroy'])->name('product.destroy')->middleware('account.exists');

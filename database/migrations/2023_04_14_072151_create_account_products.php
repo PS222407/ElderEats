@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('account_id')->constrained();
             $table->foreignId('product_id')->constrained();
-            $table->date('expiration_date');
+            $table->date('expiration_date')->nullable();
             $table->dateTime('ran_out_at')->nullable();
         });
     }

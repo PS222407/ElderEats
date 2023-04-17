@@ -21,7 +21,7 @@ class ProductController extends Controller
             ]);
             $json = $response->json();
             if ($json['errors'] != []) {
-                return response()->json(['status' => 'failed', 'message' => 'product not found in api or database']);
+                return response()->json(['status' => 'failed', 'message' => 'product not found']);
             }
 
             $accountProducts->create([
@@ -40,5 +40,19 @@ class ProductController extends Controller
         }
 
         return response()->json(['status' => 'success', 'message' => 'product added successfully']);
+    }
+
+    public function destroy(Request $request)
+    {
+        $product = Product::firstWhere('barcode', $request->barcode);
+        if (!$product) {
+            return response()->json(['status' => 'failed', 'message' => 'product not found']);
+        }
+
+        $account = Account::firstWhere('token', $request->account_token);
+        $relatedProducts = $account->products()->where('product_id', $product->id)->get();
+        dd($relatedProducts);
+
+        return response()->json(['status' => 'success', 'message' => 'product deleted successfully']);
     }
 }
