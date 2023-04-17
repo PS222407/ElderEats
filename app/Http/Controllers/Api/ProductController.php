@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
@@ -50,8 +51,11 @@ class ProductController extends Controller
         }
 
         $account = Account::firstWhere('token', $request->account_token);
-        $relatedProducts = $account->products()->where('product_id', $product->id)->get();
-        dd($relatedProducts);
+        $relatedProducts = $account->products()->withPivot(['id'])->where('product_id', $product->id)->get();
+
+        $product = DB::table('account_products')->find(4);
+        dd($product, $product->id, $product->expiration_date);
+//        dd($relatedProducts->toArray(), $product->);
 
         return response()->json(['status' => 'success', 'message' => 'product deleted successfully']);
     }
