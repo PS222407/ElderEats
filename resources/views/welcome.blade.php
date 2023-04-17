@@ -4,6 +4,7 @@
     <div class="flex flex-col mx-auto text-2xl">
         <button onclick="showCode()" class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 p-2 rounded text-white font-bold">Show code</button>
         <div id="display-code" class="text-center"></div>
+        <div id="display-qrcode" class="text-center p-2"></div>
     </div>
 
     <script>
@@ -11,6 +12,7 @@
 
         async function showCode() {
             document.getElementById('display-code').innerHTML = await getCode();
+            document.getElementById('display-qrcode').innerHTML = await getQrCode();
             waitForIncomingToken();
         }
 
@@ -18,11 +20,21 @@
             document.getElementById('display-code').innerHTML = '';
         }
 
-        async function getCode() {
+        async function fetchCodes() {
             const response = await fetch("{{ route('account.get-temporary-token') }}");
-            const jsonData = await response.json();
+            return await response.json();
+        }
+
+        async function getCode() {
+            const jsonData = await fetchCodes();
 
             return jsonData.tempToken;
+        }
+
+        async function getQrCode() {
+            const jsonData = await fetchCodes();
+
+            return jsonData.tempTokenQR;
         }
 
         function waitForIncomingToken() {

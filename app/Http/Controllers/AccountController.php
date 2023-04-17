@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use App\Classes\Account;
 use App\Enums\ConnectionStatus;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AccountController extends Controller
 {
     public function getTempToken()
     {
         $tempToken = Account::generateTempToken();
+        $svg = QrCode::generate($tempToken);
 
         return response()->json([
-            'tempToken' => $tempToken
+            'tempToken' => $tempToken,
+            'tempTokenQR' => $svg->toHtml(),
         ]);
     }
 
