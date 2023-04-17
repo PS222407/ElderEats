@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\Account;
 use App\Enums\ConnectionStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AccountController extends Controller
@@ -61,5 +62,11 @@ class AccountController extends Controller
         }
 
         return response()->json(['status' => 'failed', 'message' => 'unknown']);
+    }
+
+    public function detachProduct(Request $request)
+    {
+        dd($request->all());
+//        $product = DB::table('account_products')->find(4);
     }
 }

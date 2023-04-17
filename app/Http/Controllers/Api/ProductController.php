@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\DeleteProductScanned;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Product;
@@ -50,13 +51,11 @@ class ProductController extends Controller
             return response()->json(['status' => 'failed', 'message' => 'product not found']);
         }
 
-        $products = Account::firstWhere('token', $request->account_token)->products()->withPivot(['id'])->where('product_id', $product->id)->get();
-        dd($products->toArray());
+        $account = Account::firstWhere('token', $request->account_token);
+        $products = $account->products()->withPivot(['id', 'expiration_date', 'ran_out_at'])->where('product_id', $product->id)->get()->toArray();
 
-        $product = DB::table('account_products')->find(4);
-        dd($product, $product->id, $product->expiration_date);
-//        dd($relatedProducts->toArray(), $product->);
+        DeleteProductScanned::dispatch($products, $account->id);
 
-        return response()->json(['status' => 'success', 'message' => 'product deleted successfully']);
+        return response()->json(['status' => 'pending', 'message' => 'call made successfully, further processes are done asynchronously']);
     }
 }
