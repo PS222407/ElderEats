@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained();
             $table->date('expiration_date')->nullable();
             $table->dateTime('ran_out_at')->nullable();
+            $table->timestamps();
         });
     }
 
