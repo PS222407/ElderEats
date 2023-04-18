@@ -21,8 +21,8 @@ Route::get('/account/get-temporary-token', [AccountController::class, 'getTempTo
 Route::get('/account/has-coming-request', [AccountController::class, 'hasComingRequest'])->name('account.has-coming-request');
 Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOrDenyUser'])->name('account.accept-or-deny-user');
 Route::delete('/account/product', [AccountController::class, 'detachProduct']);
-Route::post('/account/add-to-shopping-list', [AccountController::class, 'addToShoppingList']);
 
+Route::post('/account/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
 Route::post('/product/{ean}', [ProductController::class, 'store']);
 
 Route::get('/test', function () {

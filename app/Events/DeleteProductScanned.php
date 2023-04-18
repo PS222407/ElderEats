@@ -14,19 +14,13 @@ class DeleteProductScanned implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public array $products;
-
-    public string $accountId;
-
     /**
      * Create a new event instance.
      */
     public function __construct(
-        array $products,
-        string $accountId,
+        public array $products,
+        public string $accountId,
     ) {
-        $this->products = $products;
-        $this->accountId = $accountId;
     }
 
     /**

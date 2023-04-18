@@ -10,6 +10,9 @@
     @if (session('popup'))
         <div id="show-add-to-shopping-list" ean="{{ session('ean') }}"></div>
     @endif
+    @if(session('type'))
+        <div id="show-success-alert"></div>
+    @endif
 
     <script>
         let timeoutArray = [];

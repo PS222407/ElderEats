@@ -17,13 +17,16 @@ const options = {
 };
 const modal = new Modal($targetEl, options);
 
-document.getElementById('close-delete-products-button').addEventListener('click', function () {
-   modal.hide();
-});document.getElementById('close-delete-products-button2').addEventListener('click', function () {
-   modal.hide();
+const closeDeleteProductsButton = document.getElementById('close-delete-products-button');
+const closeDeleteProductsButton2 = document.getElementById('close-delete-products-button2');
+closeDeleteProductsButton?.addEventListener('click', function () {
+    modal.hide();
+});
+closeDeleteProductsButton2?.addEventListener('click', function () {
+    modal.hide();
 });
 
-Echo.channel('product-scanned-channel-'+ account)
+Echo.channel('product-scanned-channel-' + account)
     .listen('.add-product', (e) => {
         if (e.productFound) {
             Swal.fire({
@@ -38,7 +41,8 @@ Echo.channel('product-scanned-channel-'+ account)
                 allowOutsideClick: false,
                 icon: "error",
                 title: "Product naam ontbreekt",
-                html: "<form action='/product/" + e.ean + "' method='post'>" +
+                html: "" +
+                    "<form action='/product/" + e.ean + "' method='post'>" +
                     "   <input type='hidden' name='_token' value='" + csrf + "' />" +
                     "   <input type='text' name='name' />" +
                     "   <button type='submit'>Opslaan</button>" +
@@ -48,43 +52,43 @@ Echo.channel('product-scanned-channel-'+ account)
             })
         }
     }).listen('.delete-product', (e) => {
-        const list = document.getElementById('deleted-products-list');
-        if (!list) return;
-        list.innerHTML = "";
+    const list = document.getElementById('deleted-products-list');
+    if (!list) return;
+    list.innerHTML = "";
 
-        for (let i = 0; i < e.products.length; i++) {
-            let item = e.products[i];
+    for (let i = 0; i < e.products.length; i++) {
+        let item = e.products[i];
 
-            if (i === 0) {
-                const productNameContainer = document.createElement('div');
-                const text = document.createElement('div');
-                text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
-                productNameContainer.appendChild(text);
-                list.appendChild(productNameContainer);
-            }
-
-            const container = document.createElement('div');
-            const el = document.createElement('div');
-            const link = document.createElement('a');
-
-            el.innerText = dateStringToHumanNL(item.pivot.expiration_date);
-            // link.href = '/' + item.pivot.id;
-            // link.innerText = 'Verwijder deze';
-            const form = createDeleteProductForm(item.pivot.id);
-
-            container.appendChild(el);
-            // container.appendChild(link);
-            container.appendChild(form);
-
-            list.appendChild(container);
+        if (i === 0) {
+            const productNameContainer = document.createElement('div');
+            const text = document.createElement('div');
+            text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
+            productNameContainer.appendChild(text);
+            list.appendChild(productNameContainer);
         }
 
-        if (e.products.length <= 0) {
-            list.innerHTML = "Er zijn geen producten om te verwijderen"
-        }
+        const container = document.createElement('div');
+        const el = document.createElement('div');
+        const link = document.createElement('a');
 
-        modal.show();
-    });
+        el.innerText = dateStringToHumanNL(item.pivot.expiration_date);
+        // link.href = '/' + item.pivot.id;
+        // link.innerText = 'Verwijder deze';
+        const form = createDeleteProductForm(item.pivot.id);
+
+        container.appendChild(el);
+        // container.appendChild(link);
+        container.appendChild(form);
+
+        list.appendChild(container);
+    }
+
+    if (e.products.length <= 0) {
+        list.innerHTML = "Er zijn geen producten om te verwijderen"
+    }
+
+    modal.show();
+});
 
 function createDeleteProductForm(id) {
     // Create a form element
@@ -146,7 +150,7 @@ function dateStringToHumanNL(date) {
     if (!date) return "onbekend";
 
     const dateObject = new Date(date);
-    const options = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' };
+    const options = {day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'};
 
     return dateObject.toLocaleDateString('nl-NL', options); // Output: "20 april 2023"
 }
@@ -169,6 +173,27 @@ if (showAddToShoppingList) {
             axios.post('/account/add-to-shopping-list', {
                 ean: showAddToShoppingList.getAttribute('ean'),
             })
+            .then(function (response) {
+                if (response.status === 200) {
+                    successAlert();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     })
+}
+const showSuccessAlert = document.getElementById('show-success-alert');
+if (showSuccessAlert) {
+    successAlert();
+}
+
+function successAlert() {
+    Swal.fire({
+        icon: "success",
+        title: 'Success',
+        showConfirmButton: false,
+        timer: 1500,
+    });
 }

@@ -84,17 +84,4 @@ class AccountController extends Controller
 
         return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
     }
-
-    public function addToShoppingList(Request $request)
-    {
-        $product = Product::firstWhere('barcode', $request->ean);
-
-        if (!$product) {
-            return response()->json(['status' => 'failed', 'message' => 'product not found'], 404);
-        }
-
-        Account::$accountModel->shoppingList()->attach($product, ['is_active' => true]);
-
-        return response()->json(['status' => 'success', 'message' => 'success']);
-    }
 }
