@@ -29,7 +29,7 @@ class Account extends Model
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'account_products')->withTimestamps();
+        return $this->belongsToMany(Product::class, 'account_products')->withPivot(['id', 'expiration_date', 'ran_out_at'])->withTimestamps();
     }
 
     public function shoppingList(): BelongsToMany
