@@ -55,8 +55,13 @@ Echo.channel('product-scanned-channel-'+ account)
             container.appendChild(form);
 
             list.appendChild(container);
-            modal.show();
         }
+
+        if (e.products.length <= 0) {
+            list.innerHTML = "Er zijn geen producten om te verwijderen"
+        }
+
+        modal.show();
     });
 
 function createDeleteProductForm(id) {
@@ -92,7 +97,7 @@ function createDeleteProductForm(id) {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'JA',
-            cancelButtonText: "nee",
+            cancelButtonText: "NEE",
         }).then((result) => {
             if (result.isConfirmed) {
                 form.submit(); // submit the form
@@ -121,4 +126,25 @@ function dateStringToHumanNL(date) {
     const options = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' };
 
     return dateObject.toLocaleDateString('nl-NL', options); // Output: "20 april 2023"
+}
+
+const showAddToShoppingList = document.getElementById('show-add-to-shopping-list')
+if (showAddToShoppingList) {
+    Swal.fire({
+        title: 'Toevoegen aan boodschappenlijst?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'JA',
+        cancelButtonText: 'NEE',
+        timer: 10000,
+        timerProgressBar: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.post('/account/add-to-shopping-list', {
+                ean: showAddToShoppingList.getAttribute('ean'),
+            })
+        }
+    })
 }

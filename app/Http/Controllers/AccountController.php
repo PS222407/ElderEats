@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Classes\Account;
 use App\Enums\ConnectionStatus;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AccountController extends Controller
@@ -70,10 +72,29 @@ class AccountController extends Controller
         $pivotId = (int)$request->pivot_id;
         $authorized = in_array($pivotId, $accountProductPivots);
 
+        $row = DB::table('account_products')->where('id', $pivotId)->first();
+        $ean = Product::find($row->product_id)->barcode;
+
         if ($authorized) {
             DB::table('account_products')->where('id', $pivotId)->delete();
         }
 
-        return redirect()->route('welcome');
+        Session::flash('popup', 'add-to-shopping-cart');
+        Session::flash('ean', $ean);
+
+        return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
+    }
+
+    public function addToShoppingList(Request $request)
+    {
+        $product = Product::firstWhere('barcode', $request->ean);
+
+        if (!$product) {
+            return response()->json(['status' => 'failed', 'message' => 'product not found'], 404);
+        }
+
+        Account::$accountModel->shoppingList()->attach($product, ['is_active' => true]);
+
+        return response()->json(['status' => 'success', 'message' => 'success']);
     }
 }

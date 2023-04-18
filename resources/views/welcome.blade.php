@@ -7,6 +7,10 @@
         <div id="display-qrcode" class="text-center p-2"></div>
     </div>
 
+    @if (session('popup'))
+        <div id="show-add-to-shopping-list" ean="{{ session('ean') }}"></div>
+    @endif
+
     <script>
         let timeoutArray = [];
 

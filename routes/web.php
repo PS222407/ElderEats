@@ -20,16 +20,10 @@ Route::get('/account/get-temporary-token', [AccountController::class, 'getTempTo
 Route::get('/account/has-coming-request', [AccountController::class, 'hasComingRequest'])->name('account.has-coming-request');
 Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOrDenyUser'])->name('account.accept-or-deny-user');
 Route::delete('/account/product', [AccountController::class, 'detachProduct']);
+Route::post('/account/add-to-shopping-list', [AccountController::class, 'addToShoppingList']);
 
 Route::get('/test', function () {
    return view('test', [
        'products' => \App\Classes\Account::$accountModel->products,
    ]);
-});
-
-Route::get('/push', function () {
-    \App\Events\TestEvent::dispatch();
-});
-Route::get('/receive', function () {
-   return view('receive');
 });
