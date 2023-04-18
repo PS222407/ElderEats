@@ -21,66 +21,13 @@
 
         async function showCode() {
             const response = await fetch("{{ route('account.get-temporary-token') }}");
-            jsonData = await response.json();
+            const jsonData = await response.json();
 
             document.getElementById('display-code').innerHTML = jsonData.tempToken;
             document.getElementById('display-qrcode').innerHTML = jsonData.tempTokenQR;
+
+            setTimeout(hideCode, 10 * 60 * 1000);
         }
-
-        function hideCode() {
-            document.getElementById('display-code').innerHTML = '';
-        }
-
-        // function waitForIncomingToken() {
-        //     const minutes = 10;
-        //     const intervalSeconds = 5;
-        //
-        //     for (let i = 0; i < minutes * 10 / intervalSeconds; i++) {
-        //         let timeout = setTimeout(function () {
-        //             checkIncomingCodeInDatabase();
-        //         }, intervalSeconds * 1000 * i);
-        //
-        //         timeoutArray.push(timeout);
-        //     }
-        // }
-
-        {{--async function checkIncomingCodeInDatabase() {--}}
-        {{--    const response = await fetch("{{ route('account.has-coming-request') }}");--}}
-        {{--    const jsonData = await response.json();--}}
-
-        {{--    if (jsonData.status === 'success') {--}}
-        {{--        requestIncomingFromUser(jsonData.userName, jsonData.userId);--}}
-        {{--    }--}}
-        {{--}--}}
-
-        {{--function requestIncomingFromUser(userName, userId) {--}}
-        {{--    stopTimeouts();--}}
-        {{--    let isConfirmed = confirm(userName + ' wil verbinding maken. Klik op OK om toe te staan');--}}
-        {{--    acceptOrDenyUser(isConfirmed, userId);--}}
-        {{--}--}}
-
-        {{--function stopTimeouts() {--}}
-        {{--    for (let i = 0; i < timeoutArray.length; i++) {--}}
-        {{--        clearTimeout(timeoutArray[i]);--}}
-        {{--    }--}}
-        {{--}--}}
-
-        {{--async function acceptOrDenyUser(isConfirmed, userId) {--}}
-        {{--    console.log(isConfirmed, userId)--}}
-        {{--    axios.post("{{ route('account.accept-or-deny-user') }}", {--}}
-        {{--        isConfirmed: isConfirmed,--}}
-        {{--        userId: userId--}}
-        {{--    }).then(function (response) {--}}
-        {{--        let jsonData = response.data;--}}
-
-        {{--        if (jsonData.status === 'success') {--}}
-        {{--            hideCode();--}}
-        {{--            alert(jsonData.message);--}}
-        {{--        }--}}
-        {{--    }).catch(function (error) {--}}
-        {{--        console.error(error);--}}
-        {{--    });--}}
-        {{--}--}}
     </script>
 
     <div id="modalEl" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained();
             $table->foreignId('account_id')->constrained();
             $table->boolean('is_active');
+            $table->timestamps();
         });
     }
 

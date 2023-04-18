@@ -107,6 +107,7 @@ Echo.channel('user-account-requests-' + account)
                 .then(function (response) {
                     if (response.status === 200) {
                         successAlert();
+                        hideCode();
                     }
                 })
                 .catch(function (error) {
@@ -172,15 +173,6 @@ function createDeleteProductForm(id) {
     return form;
 }
 
-function dateStringToHumanNL(date) {
-    if (!date) return "onbekend";
-
-    const dateObject = new Date(date);
-    const options = {day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'};
-
-    return dateObject.toLocaleDateString('nl-NL', options); // Output: "20 april 2023"
-}
-
 const showAddToShoppingList = document.getElementById('show-add-to-shopping-list')
 if (showAddToShoppingList) {
     Swal.fire({
@@ -210,6 +202,16 @@ if (showAddToShoppingList) {
         }
     })
 }
+
+function dateStringToHumanNL(date) {
+    if (!date) return "onbekend";
+
+    const dateObject = new Date(date);
+    const options = {day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'};
+
+    return dateObject.toLocaleDateString('nl-NL', options); // Output: "20 april 2023"
+}
+
 const showSuccessAlert = document.getElementById('show-success-alert');
 if (showSuccessAlert) {
     successAlert();
@@ -222,4 +224,9 @@ function successAlert() {
         showConfirmButton: false,
         timer: 1500,
     });
+}
+
+window.hideCode = function() {
+    document.getElementById('display-code').innerHTML = '';
+    document.getElementById('display-qrcode').innerHTML = '';
 }
