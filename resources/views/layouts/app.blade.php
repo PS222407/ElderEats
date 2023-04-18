@@ -9,8 +9,10 @@
     <title>Laravel</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="antialiased">
-@yield('content')
+    @yield('content')
+    @livewireScripts
 </body>
 </html>

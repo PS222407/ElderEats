@@ -45,6 +45,6 @@ class User extends Authenticatable
 
     public function accounts(): BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'account_users');
+        return $this->belongsToMany(Account::class, 'account_users')->withTimestamps();
     }
 }

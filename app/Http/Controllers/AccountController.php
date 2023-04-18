@@ -23,65 +23,16 @@ class AccountController extends Controller
         ]);
     }
 
-    public function hasComingRequest()
+    public function attachUser(Request $request)
     {
-        $usersInProcess = Account::$accountModel->usersInProcess;
-        $user = $usersInProcess->last();
+        $usersInProcess = Account::$accountModel->usersInProcess->pluck('id')->toArray();
 
-        if (!$user) {
-            return response()->json(['status' => 'failed', 'message' => 'No users found']);
+        if (in_array($request->userId, $usersInProcess)) {
+            Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
+                'status' => ConnectionStatus::CONNECTED,
+            ]);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'userName' => $user->name,
-            'userId' => $user->id,
-        ]);
-    }
-
-    public function acceptOrDenyUser(Request $request)
-    {
-        if ($request->isConfirmed === true || $request->isConfirmed === false) {
-            $account = Account::$accountModel->usersInProcess()->withPivot('status')->where('user_id', $request->userId)->first();
-
-            if ($account) {
-                if ($request->isConfirmed === true) {
-                    Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
-                        'status' => ConnectionStatus::CONNECTED,
-                    ]);
-
-                    return response()->json(['status' => 'success', 'message' => 'user connected']);
-                } elseif ($request->isConfirmed === false) {
-                    Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
-                        'status' => ConnectionStatus::REFUSED,
-                    ]);
-
-                    return response()->json(['status' => 'success', 'message' => 'user refused']);
-                }
-            }
-
-            return response()->json(['status' => 'failed', 'message' => 'user not found']);
-        }
-
-        return response()->json(['status' => 'failed', 'message' => 'unknown']);
-    }
-
-    public function detachProduct(Request $request)
-    {
-        $accountProductPivots = Account::$accountModel->products()->withPivot(['id'])->get()->pluck('pivot.id')->toArray();
-        $pivotId = (int)$request->pivot_id;
-        $authorized = in_array($pivotId, $accountProductPivots);
-
-        $row = DB::table('account_products')->where('id', $pivotId)->first();
-        $ean = Product::find($row->product_id)->barcode;
-
-        if ($authorized) {
-            DB::table('account_products')->where('id', $pivotId)->delete();
-        }
-
-        Session::flash('popup', 'add-to-shopping-cart');
-        Session::flash('ean', $ean);
-
-        return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
+        return response()->json(['status' => 'success', 'message' => 'user successfully attached to account']);
     }
 }

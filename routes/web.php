@@ -18,15 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome')->name('welcome');
 
 Route::get('/account/get-temporary-token', [AccountController::class, 'getTempToken'])->name('account.get-temporary-token');
-Route::get('/account/has-coming-request', [AccountController::class, 'hasComingRequest'])->name('account.has-coming-request');
+Route::post('/account/attach-user', [AccountController::class, 'attachUser'])->name('account.attach-user');
 Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOrDenyUser'])->name('account.accept-or-deny-user');
-Route::delete('/account/product', [AccountController::class, 'detachProduct']);
 
-Route::post('/account/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
+Route::delete('/product/account/detach', [ProductController::class, 'detachProduct']);
+Route::post('/product/account/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
 Route::post('/product/{ean}', [ProductController::class, 'store']);
-
-Route::get('/test', function () {
-   return view('test', [
-       'products' => \App\Classes\Account::$accountModel->products,
-   ]);
-});

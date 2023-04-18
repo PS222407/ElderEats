@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/v1/product', [ProductController::class, 'store'])->name('product.store')->middleware('account.exists');
 Route::delete('/v1/product', [ProductController::class, 'destroy'])->name('product.destroy')->middleware('account.exists');
-Route::delete('/v1/account-connection', [ProductController::class, 'destroy'])->name('product.destroy')->middleware('account.exists');
+
+Route::post('/v1/account-connection', [AccountController::class, 'incomingUser'])->middleware('account.exists');

@@ -19,21 +19,21 @@ class Account extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'account_users');
+        return $this->belongsToMany(User::class, 'account_users')->withTimestamps();
     }
 
     public function usersInProcess(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', ConnectionStatus::IN_PROCESS);
+        return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', ConnectionStatus::IN_PROCESS)->withTimestamps();
     }
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'account_products');
+        return $this->belongsToMany(Product::class, 'account_products')->withTimestamps();
     }
 
     public function shoppingList(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'fixed_products');
+        return $this->belongsToMany(Product::class, 'fixed_products')->withTimestamps();
     }
 }

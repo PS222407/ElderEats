@@ -4,7 +4,7 @@ import 'flowbite';
 
 const csrf = document.querySelector('meta[name="csrf-token"]').content;
 const account = document.querySelector('meta[name="account"]').content;
-const DETACH_PRODUCT_URL = "/account/product";
+const DETACH_PRODUCT_URL = "/product/account/detach";
 
 // set the modal menu element
 const $targetEl = document.getElementById('modalEl');
@@ -51,44 +51,70 @@ Echo.channel('product-scanned-channel-' + account)
                 showConfirmButton: false,
             })
         }
-    }).listen('.delete-product', (e) => {
-    const list = document.getElementById('deleted-products-list');
-    if (!list) return;
-    list.innerHTML = "";
+        Livewire.emit('livewireRefreshProductListHomepage');
+    })
+    .listen('.delete-product', (e) => {
+        const list = document.getElementById('deleted-products-list');
+        if (!list) return;
+        list.innerHTML = "";
 
-    for (let i = 0; i < e.products.length; i++) {
-        let item = e.products[i];
+        for (let i = 0; i < e.products.length; i++) {
+            let item = e.products[i];
 
-        if (i === 0) {
-            const productNameContainer = document.createElement('div');
-            const text = document.createElement('div');
-            text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
-            productNameContainer.appendChild(text);
-            list.appendChild(productNameContainer);
+            if (i === 0) {
+                const productNameContainer = document.createElement('div');
+                const text = document.createElement('div');
+                text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
+                productNameContainer.appendChild(text);
+                list.appendChild(productNameContainer);
+            }
+
+            const container = document.createElement('div');
+            const el = document.createElement('div');
+
+            el.innerText = dateStringToHumanNL(item.pivot.expiration_date);
+            const form = createDeleteProductForm(item.pivot.id);
+
+            container.appendChild(el);
+            container.appendChild(form);
+
+            list.appendChild(container);
         }
 
-        const container = document.createElement('div');
-        const el = document.createElement('div');
-        const link = document.createElement('a');
+        if (e.products.length <= 0) {
+            list.innerHTML = "Er zijn geen producten om te verwijderen"
+        }
 
-        el.innerText = dateStringToHumanNL(item.pivot.expiration_date);
-        // link.href = '/' + item.pivot.id;
-        // link.innerText = 'Verwijder deze';
-        const form = createDeleteProductForm(item.pivot.id);
+        modal.show();
+    });
 
-        container.appendChild(el);
-        // container.appendChild(link);
-        container.appendChild(form);
-
-        list.appendChild(container);
-    }
-
-    if (e.products.length <= 0) {
-        list.innerHTML = "Er zijn geen producten om te verwijderen"
-    }
-
-    modal.show();
-});
+Echo.channel('user-account-requests-' + account)
+    .listen('.user-incoming', (e) => {
+        Swal.fire({
+            icon: "warning",
+            title: "Verzoek voor verbinding",
+            text: e.userName + " wil verbinden met dit account",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'JA',
+            cancelButtonText: "NEE",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.post('/account/attach-user', {
+                    userId: e.userId,
+                })
+                .then(function (response) {
+                    if (response.status === 200) {
+                        successAlert();
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
+        });
+    });
 
 function createDeleteProductForm(id) {
     // Create a form element
@@ -129,7 +155,7 @@ function createDeleteProductForm(id) {
             if (result.isConfirmed) {
                 form.submit(); // submit the form
             }
-        })
+        });
     });
 
     // Create a delete button element
@@ -170,7 +196,7 @@ if (showAddToShoppingList) {
         timerProgressBar: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            axios.post('/account/add-to-shopping-list', {
+            axios.post('/product/account/add-to-shopping-list', {
                 ean: showAddToShoppingList.getAttribute('ean'),
             })
             .then(function (response) {

@@ -7,6 +7,8 @@
         <div id="display-qrcode" class="text-center p-2"></div>
     </div>
 
+    @livewire('product-list-homepage')
+
     @if (session('popup'))
         <div id="show-add-to-shopping-list" ean="{{ session('ean') }}"></div>
     @endif
@@ -18,82 +20,67 @@
         let timeoutArray = [];
 
         async function showCode() {
-            document.getElementById('display-code').innerHTML = await getCode();
-            document.getElementById('display-qrcode').innerHTML = await getQrCode();
-            waitForIncomingToken();
+            const response = await fetch("{{ route('account.get-temporary-token') }}");
+            jsonData = await response.json();
+
+            document.getElementById('display-code').innerHTML = jsonData.tempToken;
+            document.getElementById('display-qrcode').innerHTML = jsonData.tempTokenQR;
         }
 
         function hideCode() {
             document.getElementById('display-code').innerHTML = '';
         }
 
-        async function fetchCodes() {
-            const response = await fetch("{{ route('account.get-temporary-token') }}");
-            return await response.json();
-        }
+        // function waitForIncomingToken() {
+        //     const minutes = 10;
+        //     const intervalSeconds = 5;
+        //
+        //     for (let i = 0; i < minutes * 10 / intervalSeconds; i++) {
+        //         let timeout = setTimeout(function () {
+        //             checkIncomingCodeInDatabase();
+        //         }, intervalSeconds * 1000 * i);
+        //
+        //         timeoutArray.push(timeout);
+        //     }
+        // }
 
-        async function getCode() {
-            const jsonData = await fetchCodes();
+        {{--async function checkIncomingCodeInDatabase() {--}}
+        {{--    const response = await fetch("{{ route('account.has-coming-request') }}");--}}
+        {{--    const jsonData = await response.json();--}}
 
-            return jsonData.tempToken;
-        }
+        {{--    if (jsonData.status === 'success') {--}}
+        {{--        requestIncomingFromUser(jsonData.userName, jsonData.userId);--}}
+        {{--    }--}}
+        {{--}--}}
 
-        async function getQrCode() {
-            const jsonData = await fetchCodes();
+        {{--function requestIncomingFromUser(userName, userId) {--}}
+        {{--    stopTimeouts();--}}
+        {{--    let isConfirmed = confirm(userName + ' wil verbinding maken. Klik op OK om toe te staan');--}}
+        {{--    acceptOrDenyUser(isConfirmed, userId);--}}
+        {{--}--}}
 
-            return jsonData.tempTokenQR;
-        }
+        {{--function stopTimeouts() {--}}
+        {{--    for (let i = 0; i < timeoutArray.length; i++) {--}}
+        {{--        clearTimeout(timeoutArray[i]);--}}
+        {{--    }--}}
+        {{--}--}}
 
-        function waitForIncomingToken() {
-            const minutes = 10;
-            const intervalSeconds = 5;
+        {{--async function acceptOrDenyUser(isConfirmed, userId) {--}}
+        {{--    console.log(isConfirmed, userId)--}}
+        {{--    axios.post("{{ route('account.accept-or-deny-user') }}", {--}}
+        {{--        isConfirmed: isConfirmed,--}}
+        {{--        userId: userId--}}
+        {{--    }).then(function (response) {--}}
+        {{--        let jsonData = response.data;--}}
 
-            for (let i = 0; i < minutes * 10 / intervalSeconds; i++) {
-                let timeout = setTimeout(function () {
-                    checkIncomingCodeInDatabase();
-                }, intervalSeconds * 1000 * i);
-
-                timeoutArray.push(timeout);
-            }
-        }
-
-        async function checkIncomingCodeInDatabase() {
-            const response = await fetch("{{ route('account.has-coming-request') }}");
-            const jsonData = await response.json();
-
-            if (jsonData.status === 'success') {
-                requestIncomingFromUser(jsonData.userName, jsonData.userId);
-            }
-        }
-
-        function requestIncomingFromUser(userName, userId) {
-            stopTimeouts();
-            let isConfirmed = confirm(userName + ' wil verbinding maken. Klik op OK om toe te staan');
-            acceptOrDenyUser(isConfirmed, userId);
-        }
-
-        function stopTimeouts() {
-            for (let i = 0; i < timeoutArray.length; i++) {
-                clearTimeout(timeoutArray[i]);
-            }
-        }
-
-        async function acceptOrDenyUser(isConfirmed, userId) {
-            console.log(isConfirmed, userId)
-            axios.post("{{ route('account.accept-or-deny-user') }}", {
-                isConfirmed: isConfirmed,
-                userId: userId
-            }).then(function (response) {
-                let jsonData = response.data;
-
-                if (jsonData.status === 'success') {
-                    hideCode();
-                    alert(jsonData.message);
-                }
-            }).catch(function (error) {
-                console.error(error);
-            });
-        }
+        {{--        if (jsonData.status === 'success') {--}}
+        {{--            hideCode();--}}
+        {{--            alert(jsonData.message);--}}
+        {{--        }--}}
+        {{--    }).catch(function (error) {--}}
+        {{--        console.error(error);--}}
+        {{--    });--}}
+        {{--}--}}
     </script>
 
     <div id="modalEl" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">

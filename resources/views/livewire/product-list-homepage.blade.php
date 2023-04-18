@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<div>
     @foreach($products as $product)
         <div>
             <div class="text-xl font-bold">{{ $product->name }} - {{ $product->brand }} - {{ $product->quantity_in_package }} - {{ $product->barcode }}</div>
@@ -9,4 +7,4 @@
             </div>
         </div>
     @endforeach
-@endsection
+</div>
