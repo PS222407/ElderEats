@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\AddProductScanned;
 use App\Events\DeleteProductScanned;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
@@ -15,33 +16,37 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $product = Product::firstWhere('barcode', $request->barcode);
-        $accountProducts = Account::firstWhere('token', $request->account_token)->products();
+        $account = Account::firstWhere('token', $request->account_token);
+        $productFound = false;
 
         if (!$product) {
             $response = Http::get(sprintf('https://world.openfoodfacts.org/api/v3/product/%s.json', $request->barcode), [
                 'fields' => 'product_name,image_url,brands,quantity',
             ]);
             $json = $response->json();
-            if ($json['errors'] != []) {
-                return response()->json(['status' => 'failed', 'message' => 'product not found']);
-            }
+            if ($json['errors'] == []) {
+                $account->products()->create([
+                    'name' => $json['product']['product_name'],
+                    'brand' => $json['product']['brands'],
+                    'quantity_in_package' => $json['product']['quantity'],
+                    'barcode' => $request->barcode,
+                    'image' => $json['product']['image_url'],
+                ]);
 
-            $accountProducts->create([
-                'name' => $json['product']['product_name'],
-                'brand' => $json['product']['brands'],
-                'quantity_in_package' => $json['product']['quantity'],
-                'barcode' => $request->barcode,
-                'image' => $json['product']['image_url'],
-            ], [
-//                'expiration_date' => now(), //TODO: change to expiration date
-            ]);
+                $productFound = true;
+            }
         } else {
-            $accountProducts->attach($product, [
-//                'expiration_date' => now(), //TODO: change to expiration date
-            ]);
+            $account->products()->attach($product);
+            $productFound = true;
         }
 
-        return response()->json(['status' => 'success', 'message' => 'product added successfully']);
+        AddProductScanned::dispatch($request->barcode, $account->id, $productFound);
+
+        if ($productFound) {
+            return response()->json(['status' => 'success', 'message' => 'product added successfully']);
+        } else {
+            return response()->json(['status' => 'failed', 'message' => 'product not found']);
+        }
     }
 
     public function destroy(Request $request)

@@ -32,7 +32,7 @@ class Account extends Model
         return $this->belongsToMany(Product::class, 'account_products');
     }
 
-    public function shoppingList()
+    public function shoppingList(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'fixed_products');
     }

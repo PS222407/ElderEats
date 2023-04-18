@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,8 @@ Route::get('/account/has-coming-request', [AccountController::class, 'hasComingR
 Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOrDenyUser'])->name('account.accept-or-deny-user');
 Route::delete('/account/product', [AccountController::class, 'detachProduct']);
 Route::post('/account/add-to-shopping-list', [AccountController::class, 'addToShoppingList']);
+
+Route::post('/product/{ean}', [ProductController::class, 'store']);
 
 Route::get('/test', function () {
    return view('test', [

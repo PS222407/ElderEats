@@ -17,9 +17,11 @@ class AddProductScanned implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct()
-    {
-        //
+    public function __construct(
+        public string $ean,
+        public string $accountId,
+        public bool $productFound
+    ) {
     }
 
     /**
@@ -30,7 +32,7 @@ class AddProductScanned implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('product-scanned-channel'),
+            new Channel('product-scanned-channel-'.$this->accountId),
         ];
     }
 

@@ -2,6 +2,7 @@ import './bootstrap';
 import Swal from 'sweetalert2';
 import 'flowbite';
 
+const csrf = document.querySelector('meta[name="csrf-token"]').content;
 const account = document.querySelector('meta[name="account"]').content;
 const DETACH_PRODUCT_URL = "/account/product";
 
@@ -24,7 +25,28 @@ document.getElementById('close-delete-products-button').addEventListener('click'
 
 Echo.channel('product-scanned-channel-'+ account)
     .listen('.add-product', (e) => {
-        alert('product added: ' + '')
+        if (e.productFound) {
+            Swal.fire({
+                allowOutsideClick: false,
+                icon: "success",
+                title: "Product toegevoegd",
+                timer: 1500,
+                showConfirmButton: false,
+            })
+        } else {
+            Swal.fire({
+                allowOutsideClick: false,
+                icon: "error",
+                title: "Product naam ontbreekt",
+                html: "<form action='/product/" + e.ean + "' method='post'>" +
+                    "   <input type='hidden' name='_token' value='" + csrf + "' />" +
+                    "   <input type='text' name='name' />" +
+                    "   <button type='submit'>Opslaan</button>" +
+                    "</form>" +
+                    "",
+                showConfirmButton: false,
+            })
+        }
     }).listen('.delete-product', (e) => {
         const list = document.getElementById('deleted-products-list');
         if (!list) return;
@@ -91,6 +113,7 @@ function createDeleteProductForm(id) {
         event.preventDefault(); // prevent the default form submission behavior
 
         Swal.fire({
+            allowOutsideClick: false,
             title: 'Verwijderen?',
             icon: 'warning',
             showCancelButton: true,
@@ -131,6 +154,7 @@ function dateStringToHumanNL(date) {
 const showAddToShoppingList = document.getElementById('show-add-to-shopping-list')
 if (showAddToShoppingList) {
     Swal.fire({
+        allowOutsideClick: false,
         title: 'Toevoegen aan boodschappenlijst?',
         icon: 'question',
         showCancelButton: true,
