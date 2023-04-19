@@ -24,3 +24,5 @@ Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOr
 Route::delete('/product/account/detach', [ProductController::class, 'detachProduct']);
 Route::post('/product/account/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
 Route::post('/product/{ean}', [ProductController::class, 'store']);
+
+Route::view('/test', 'test');

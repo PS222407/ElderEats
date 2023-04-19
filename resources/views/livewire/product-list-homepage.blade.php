@@ -6,8 +6,8 @@
             <th class="px-2">Houdsbaarheidsdatum</th>
         </tr>
         @foreach($products as $product)
-            <tr class="border-b-2 @if($loop->first) border-t-2 @endif border-black text-center">
-                <td class="flex items-center p-2">
+            <tr class="@if($product->pivot->expiration_date == null) bg-gray-300 @elseif($product->pivot->expiration_date < now()) bg-red-300 @elseif($product->pivot->expiration_date < now()->addDays(2)) bg-yellow-300 @endif border-b-2 @if($loop->first) border-t-2 @endif border-black text-center">
+                <td class="flex gap-x-4 items-center p-2">
                     <img src="{{ $product->image ?? asset('Images/No_Image_Available.jpg') }}" alt="product image" class="w-28 aspect-square object-contain">
                     <div>
                         {{ $product->name }} - {{ $product->brand }} - {{ $product->quantity_in_package }}
@@ -22,4 +22,6 @@
             </tr>
         @endforeach
     </table>
+
+    {{ $products->links() }}
 </div>

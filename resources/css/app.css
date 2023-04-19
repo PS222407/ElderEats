@@ -5,3 +5,5 @@
 body {
     font-family: Verdana, serif;
 }
+
+[x-cloak] { display: none !important; }
