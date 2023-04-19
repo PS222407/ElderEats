@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
@@ -57,7 +56,7 @@ class ProductController extends Controller
         }
 
         $account = Account::firstWhere('token', $request->account_token);
-        $products = $account->products()->withPivot(['id', 'expiration_date', 'ran_out_at'])->where('product_id', $product->id)->get()->toArray();
+        $products = $account->activeProducts()->withPivot(['id', 'expiration_date', 'ran_out_at'])->where('product_id', $product->id)->get()->toArray();
 
         DeleteProductScanned::dispatch($products, $account->id);
 

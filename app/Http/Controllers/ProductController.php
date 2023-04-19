@@ -45,7 +45,9 @@ class ProductController extends Controller
         $ean = Product::find($row->product_id)->barcode;
 
         if ($authorized) {
-            DB::table('account_products')->where('id', $pivotId)->delete();
+            DB::table('account_products')->where('id', $pivotId)->update([
+                'ran_out_at' => now(),
+            ]);
         }
 
         Session::flash('popup', 'add-to-shopping-cart');

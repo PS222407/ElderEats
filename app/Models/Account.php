@@ -32,6 +32,11 @@ class Account extends Model
         return $this->belongsToMany(Product::class, 'account_products')->withPivot(['id', 'expiration_date', 'ran_out_at'])->withTimestamps();
     }
 
+    public function activeProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'account_products')->withPivot(['id', 'expiration_date', 'ran_out_at'])->withTimestamps()->wherePivot('ran_out_at', '>', now())->orWherePivotNull('ran_out_at');
+    }
+
     public function shoppingList(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'fixed_products')->withTimestamps();
