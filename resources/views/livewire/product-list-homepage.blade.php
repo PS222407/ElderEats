@@ -1,4 +1,6 @@
 <div class="p-5">
+    <input type="search" name="search" wire:model="search">
+
     <table class="mt-10 w-full text-xl">
         <tr class="text-center text-label">
             <th class="px-2">Product</th>

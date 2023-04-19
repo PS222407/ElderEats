@@ -11,7 +11,11 @@ class ProductListHomepage extends Component
 {
     use WithPagination;
 
+    protected $queryString = ['search' => ['except' => '']];
+
     protected $listeners = ['livewireRefreshProductListHomepage' => 'render'];
+
+    public $search;
 
 
     public function render()
@@ -21,7 +25,8 @@ class ProductListHomepage extends Component
             ->activeProducts()
             ->select('products.*', 'account_products.id as account_products_id')
             ->selectRaw('COUNT(*) AS account_products_count')
-            ->groupBy('expiration_date')
+            ->where('name', 'like', '%'.$this->search.'%')
+            ->groupBy('id', 'expiration_date')
             ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
             ->paginate(6);
 
