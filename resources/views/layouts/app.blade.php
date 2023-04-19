@@ -12,6 +12,7 @@
     @livewireStyles
 </head>
 <body class="antialiased">
+    @include('layouts.nav')
     @yield('content')
     @livewireScripts
 </body>

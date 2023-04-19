@@ -8,6 +8,11 @@ module.exports = {
     ],
     theme: {
         extend: {},
+        colors: {
+            'banner': '#519162',
+            'label': '#777777',
+            'hamburger': '#365F41',
+        },
     },
     plugins: [
         require('flowbite/plugin'),
