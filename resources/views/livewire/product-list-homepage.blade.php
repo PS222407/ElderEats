@@ -17,7 +17,7 @@
                     {{ $product->account_products_count }}x
                 </td>
                 <td>
-                    {{ dateStringToHumanNL($product->pivot_expiration_date) }}
+                    {{ dateStringToHumanNL($product->pivot->expiration_date) }}
                 </td>
             </tr>
         @endforeach
