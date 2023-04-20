@@ -26,10 +26,10 @@ class ProductController extends Controller
             if ($json['errors'] == []) {
                 $account->products()->create([
                     'name' => $json['product']['product_name'],
-                    'brand' => $json['product']['brands'],
-                    'quantity_in_package' => $json['product']['quantity'],
+                    'brand' => $json['product']['brands'] ?? null,
+                    'quantity_in_package' => $json['product']['quantity'] ?? null,
                     'barcode' => $request->barcode,
-                    'image' => $json['product']['image_url'],
+                    'image' => $json['product']['image_url'] ?? null,
                 ]);
 
                 $productFound = true;

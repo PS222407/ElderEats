@@ -13,7 +13,7 @@ class Account
     {
         if (self::$accountModel->temporary_token_expires_at <= now()) {
             self::$accountModel->update([
-                'temporary_token' => Str::random(5),
+                'temporary_token' => random_int(100_000, 999_999),
                 'temporary_token_expires_at' => now()->addMinutes(10),
             ]);
         }

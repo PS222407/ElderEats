@@ -1,5 +1,8 @@
 <div class="p-5">
-    <input type="search" name="search" wire:model="search">
+    <div class="flex flex-col">
+        <label for="search">Zoeken:</label>
+        <input type="search" id="search" name="search" wire:model="search" class="rounded">
+    </div>
 
     <table class="mt-10 w-full text-xl">
         <tr class="text-center text-label">

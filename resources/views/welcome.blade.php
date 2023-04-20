@@ -1,13 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col mx-auto text-2xl">
-        <button onclick="showCode()" class="hover:bg-blue-600 active:bg-blue-700 p-2 rounded font-bold">Show code</button>
-        <div id="display-code" class="text-center"></div>
-        <div id="display-qrcode" class="text-center p-2"></div>
-    </div>
+    <h1 class="text-4xl mt-10 font-bold text-center">Inventaris</h1>
 
-    <h1 class="text-4xl font-bold text-center">Inventaris</h1>
+    @include('layouts.sidenav')
 
     @livewire('product-list-homepage')
 

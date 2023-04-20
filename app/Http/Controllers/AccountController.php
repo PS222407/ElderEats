@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Account;
 use App\Enums\ConnectionStatus;
-use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AccountController extends Controller
@@ -15,7 +12,7 @@ class AccountController extends Controller
     public function getTempToken()
     {
         $tempToken = Account::generateTempToken();
-        $svg = QrCode::generate($tempToken);
+        $svg = QrCode::backgroundColor(0,0,0,0)->color(255,255,255)->size(250)->generate($tempToken);
 
         return response()->json([
             'tempToken' => $tempToken,
