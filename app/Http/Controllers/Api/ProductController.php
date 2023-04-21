@@ -56,7 +56,7 @@ class ProductController extends Controller
         }
 
         $account = Account::firstWhere('token', $request->account_token);
-        $products = $account->activeProducts()->withPivot(['id', 'expiration_date', 'ran_out_at'])->where('product_id', $product->id)->get()->toArray();
+        $products = $account->activeProducts()->where('product_id', $product->id)->get()->toArray();
 
         DeleteProductScanned::dispatch($products, $account->id);
 

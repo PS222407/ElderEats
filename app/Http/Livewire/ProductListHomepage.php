@@ -24,13 +24,8 @@ class ProductListHomepage extends Component
         DB::statement('SET SESSION sql_mode = ""');
         $products = Account::$accountModel
             ->activeProducts()
-            ->select('products.*', 'account_products.id as account_products_id')
             ->selectRaw('COUNT(*) AS account_products_count')
             ->where('name', 'like', '%' . $this->search . '%')
-            ->where(function (Builder $query) {
-                $query->whereRaw('ran_out_at > NOW()')
-                    ->orWhereRaw('ran_out_at IS NULL');
-            })
             ->groupBy('id', 'expiration_date')
             ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
             ->paginate(6);

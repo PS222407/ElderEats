@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ConnectionStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -36,7 +37,11 @@ class Account extends Model
     {
         return $this->belongsToMany(Product::class, 'account_products')
             ->withPivot(['id', 'expiration_date', 'ran_out_at'])
-            ->withTimestamps();
+            ->withTimestamps()
+            ->where(function (Builder $query) {
+                $query->whereRaw('ran_out_at > NOW()')
+                    ->orWhereRaw('ran_out_at IS NULL');
+            });
     }
 
     public function shoppingList(): BelongsToMany

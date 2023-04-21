@@ -120,7 +120,6 @@ Echo.channel('user-account-requests-' + account)
     });
 
 function createDeleteProductForm(pivotId) {
-    // Create a form element
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = '/products/' + pivotId + '/detach';
@@ -134,17 +133,14 @@ function createDeleteProductForm(pivotId) {
     inputToken.type = 'hidden';
     inputToken.name = '_token';
     inputToken.value = csrfToken;
-    // const inputPivotId = document.createElement('input');
-    // inputPivotId.type = 'hidden';
-    // inputPivotId.name = 'pivot_id';
-    // inputPivotId.value = id;
+
     form.appendChild(inputMethod);
     form.appendChild(inputToken);
-    // form.appendChild(inputPivotId);
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault(); // prevent the default form submission behavior
-
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.textContent = 'Verwijder';
+    deleteButton.addEventListener('click', () => {
         Swal.fire({
             allowOutsideClick: false,
             title: 'Verwijderen?',
@@ -156,20 +152,11 @@ function createDeleteProductForm(pivotId) {
             cancelButtonText: "NEE",
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit(); // submit the form
+                form.submit();
             }
         });
     });
 
-    // Create a delete button element
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.textContent = 'Verwijder';
-    deleteButton.addEventListener('click', () => {
-        form.dispatchEvent(new Event('submit')); // dispatch a submit event to the form
-    });
-
-    // Append the button to the form
     form.appendChild(deleteButton);
 
     return form;

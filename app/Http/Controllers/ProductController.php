@@ -41,7 +41,7 @@ class ProductController extends Controller
 
     public function detach(int $pivotId)
     {
-        $accountPivotIds = Account::$accountModel->products()->withPivot(['id'])->get()->pluck('pivot.id')->toArray();
+        $accountPivotIds = Account::$accountModel->activeProducts->pluck('pivot.id')->toArray();
         $authorized = in_array($pivotId, $accountPivotIds);
 
         $row = DB::table('account_products')->where('id', $pivotId)?->first();
@@ -56,7 +56,6 @@ class ProductController extends Controller
             ]);
         }
 
-        Session::flash('popup', 'add-to-shopping-cart');
         Session::flash('ean', $ean);
 
         return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
