@@ -13,6 +13,7 @@
                 <img src="{{ asset('Images/logo_schaduw.png') }}" alt="logo" class="w-28 p-2 aspect-square">
             </a>
             <button
+                id="close-sidenav-button"
                 class="absolute right-10 mt-[24px] p-0 inline-block rounded text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                 data-te-sidenav-toggle-ref
                 data-te-target="#sidenav-1"

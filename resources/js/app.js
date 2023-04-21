@@ -109,7 +109,9 @@ Echo.channel('user-account-requests-' + account)
                 .then(function (response) {
                     if (response.status === 200) {
                         successAlert();
-                        hideCode();
+                        setTimeout(function () {
+                            hideCode();
+                        }, 1500);
                     }
                 })
                 .catch(function (error) {
@@ -231,4 +233,5 @@ function errorAlert() {
 window.hideCode = function() {
     document.getElementById('display-code').innerHTML = '';
     document.getElementById('display-qrcode').innerHTML = '';
+    document.getElementById('close-sidenav-button').click();
 }
