@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('token');
             $table->string('temporary_token')->nullable();
-            $table->timestamp('temporary_token_expires_at');
+            $table->timestamp('temporary_token_expires_at')->nullable();
             $table->timestamps();
         });
     }
