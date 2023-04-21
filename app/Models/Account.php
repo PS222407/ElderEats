@@ -34,7 +34,9 @@ class Account extends Model
 
     public function activeProducts(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'account_products')->withPivot(['id', 'expiration_date', 'ran_out_at'])->withTimestamps()->wherePivot('ran_out_at', '>', now())->orWherePivotNull('ran_out_at');
+        return $this->belongsToMany(Product::class, 'account_products')
+            ->withPivot(['id', 'expiration_date', 'ran_out_at'])
+            ->withTimestamps();
     }
 
     public function shoppingList(): BelongsToMany

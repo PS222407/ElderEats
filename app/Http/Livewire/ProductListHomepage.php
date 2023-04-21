@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Classes\Account;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -25,11 +26,14 @@ class ProductListHomepage extends Component
             ->activeProducts()
             ->select('products.*', 'account_products.id as account_products_id')
             ->selectRaw('COUNT(*) AS account_products_count')
-            ->where('name', 'like', '%'.$this->search.'%')
+            ->where('name', 'like', '%' . $this->search . '%')
+            ->where(function (Builder $query) {
+                $query->whereRaw('ran_out_at > NOW()')
+                    ->orWhereRaw('ran_out_at IS NULL');
+            })
             ->groupBy('id', 'expiration_date')
             ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
             ->paginate(6);
-
         DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
 
         return view('livewire.product-list-homepage', [
