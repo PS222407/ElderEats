@@ -39,7 +39,7 @@ class Account extends Model
             ->withPivot(['id', 'expiration_date', 'ran_out_at'])
             ->withTimestamps()
             ->where(function (Builder $query) {
-                $query->whereRaw('ran_out_at > NOW()')
+                $query->whereRaw('ran_out_at > ?', [now()])
                     ->orWhereRaw('ran_out_at IS NULL');
             });
     }
