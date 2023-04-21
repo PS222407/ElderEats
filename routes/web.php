@@ -18,11 +18,10 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome')->name('welcome');
 
 Route::get('/account/get-temporary-token', [AccountController::class, 'getTempToken'])->name('account.get-temporary-token');
-Route::post('/account/attach-user', [AccountController::class, 'attachUser'])->name('account.attach-user');
-Route::post('/account/accept-or-deny-user', [AccountController::class, 'acceptOrDenyUser'])->name('account.accept-or-deny-user');
+Route::post('/account/attach-user', [AccountController::class, 'attachUser']);
 
-Route::delete('/product/account/detach', [ProductController::class, 'detachProduct']);
-Route::post('/product/account/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
-Route::post('/product/{ean}', [ProductController::class, 'store']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::post('/products/{ean}/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
+Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach']);
 
-Route::view('/test', 'test');
+//Route::view('/test', 'test');

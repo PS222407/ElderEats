@@ -24,7 +24,7 @@
 
         <div class="flex flex-col mx-auto text-2xl mt-10">
             <div id="display-code" class="text-center text-4xl text-white"></div>
-            <div id="display-qrcode" class="my-5 text-center w-min mx-auto rounded p-3 border"></div>
+            <div id="display-qrcode" class="my-5 text-center w-min mx-auto rounded p-3 border bg-white"></div>
             <p class="capitalize w-64 text-white italic mx-auto">
                 Scan deze qr code via je telefoon vanaf onze website.
             </p>

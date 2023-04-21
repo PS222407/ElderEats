@@ -4,7 +4,6 @@ import 'flowbite';
 
 const csrf = document.querySelector('meta[name="csrf-token"]').content;
 const account = document.querySelector('meta[name="account"]').content;
-const DETACH_PRODUCT_URL = "/product/account/detach";
 
 // set the modal menu element
 const $targetEl = document.getElementById('modalEl');
@@ -12,7 +11,7 @@ const $targetEl = document.getElementById('modalEl');
 // options with default values
 const options = {
     backdrop: 'static',
-    backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
+    backdropClasses: 'bg-gray-900 bg-opacity-50 fixed inset-0 z-40',
     closable: true,
 };
 const modal = new Modal($targetEl, options);
@@ -26,8 +25,10 @@ closeDeleteProductsButton2?.addEventListener('click', function () {
     modal.hide();
 });
 
+console.log(account)
 Echo.channel('product-scanned-channel-' + account)
     .listen('.add-product', (e) => {
+        console.log('hallo');
         if (e.productFound) {
             Swal.fire({
                 allowOutsideClick: false,
@@ -42,8 +43,9 @@ Echo.channel('product-scanned-channel-' + account)
                 icon: "error",
                 title: "Product naam ontbreekt",
                 html: "" +
-                    "<form action='/product/" + e.ean + "' method='post'>" +
+                    "<form action='/products' method='post'>" +
                     "   <input type='hidden' name='_token' value='" + csrf + "' />" +
+                    "   <input type='hidden' name='ean' value='" + e.ean + "' />" +
                     "   <input type='text' name='name' />" +
                     "   <button type='submit'>Opslaan</button>" +
                     "</form>" +
@@ -117,11 +119,11 @@ Echo.channel('user-account-requests-' + account)
         });
     });
 
-function createDeleteProductForm(id) {
+function createDeleteProductForm(pivotId) {
     // Create a form element
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = DETACH_PRODUCT_URL;
+    form.action = '/products/' + pivotId + '/detach';
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const inputMethod = document.createElement('input');
@@ -132,13 +134,13 @@ function createDeleteProductForm(id) {
     inputToken.type = 'hidden';
     inputToken.name = '_token';
     inputToken.value = csrfToken;
-    const inputPivotId = document.createElement('input');
-    inputPivotId.type = 'hidden';
-    inputPivotId.name = 'pivot_id';
-    inputPivotId.value = id;
+    // const inputPivotId = document.createElement('input');
+    // inputPivotId.type = 'hidden';
+    // inputPivotId.name = 'pivot_id';
+    // inputPivotId.value = id;
     form.appendChild(inputMethod);
     form.appendChild(inputToken);
-    form.appendChild(inputPivotId);
+    // form.appendChild(inputPivotId);
 
     form.addEventListener('submit', (event) => {
         event.preventDefault(); // prevent the default form submission behavior
@@ -188,9 +190,8 @@ if (showAddToShoppingList) {
         timerProgressBar: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            axios.post('/product/account/add-to-shopping-list', {
-                ean: showAddToShoppingList.getAttribute('ean'),
-            })
+            const ean = showAddToShoppingList.getAttribute('ean');
+            axios.post('/products/' + ean + '/add-to-shopping-list')
             .then(function (response) {
                 if (response.status === 200) {
                     successAlert();
@@ -217,10 +218,24 @@ if (showSuccessAlert) {
     successAlert();
 }
 
+const showErrorAlert = document.getElementById('show-error-alert');
+if (showErrorAlert) {
+    errorAlert();
+}
+
 function successAlert() {
     Swal.fire({
         icon: "success",
-        title: 'Success',
+        title: 'Succes',
+        showConfirmButton: false,
+        timer: 1500,
+    });
+}
+
+function errorAlert() {
+    Swal.fire({
+        icon: "error",
+        title: 'Fout',
         showConfirmButton: false,
         timer: 1500,
     });

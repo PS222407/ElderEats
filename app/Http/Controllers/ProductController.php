@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Classes\Account;
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Rules\Barcode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Validator;
 
 class ProductController extends Controller
 {
-    public function store(string $ean, Request $request)
+    public function store(StoreProductRequest $request)
     {
         Account::$accountModel->products()->create([
             'name' => $request->name,
-            'barcode' => $ean,
+            'barcode' => $request->ean,
         ]);
 
         Session::flash('type', 'success');
@@ -22,9 +24,11 @@ class ProductController extends Controller
         return redirect()->route('welcome');
     }
 
-    public function addToShoppingList(Request $request)
+    public function addToShoppingList(int $ean)
     {
-        $product = Product::firstWhere('barcode', $request->ean);
+        Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
+
+        $product = Product::firstWhere('barcode', $ean);
 
         if (!$product) {
             return response()->json(['status' => 'failed', 'message' => 'product not found'], 404);
@@ -35,15 +39,17 @@ class ProductController extends Controller
         return response()->json(['status' => 'success', 'message' => 'success']);
     }
 
-    public function detachProduct(Request $request)
+    public function detach(int $pivotId)
     {
-        $accountProductPivots = Account::$accountModel->products()->withPivot(['id'])->get()->pluck('pivot.id')->toArray();
-        $pivotId = (int)$request->pivot_id;
-        $authorized = in_array($pivotId, $accountProductPivots);
+        $accountPivotIds = Account::$accountModel->products()->withPivot(['id'])->get()->pluck('pivot.id')->toArray();
+        $authorized = in_array($pivotId, $accountPivotIds);
 
-        $row = DB::table('account_products')->where('id', $pivotId)->first();
+        $row = DB::table('account_products')->where('id', $pivotId)?->first();
+        if (!$row) {
+            return redirect()->route('welcome')->with('error-popup', 'Geen gekoppeld product gevonden');
+        }
+
         $ean = Product::find($row->product_id)->barcode;
-
         if ($authorized) {
             DB::table('account_products')->where('id', $pivotId)->update([
                 'ran_out_at' => now(),
