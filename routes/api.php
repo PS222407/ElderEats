@@ -24,3 +24,4 @@ Route::post('/v1/product', [ProductController::class, 'store'])->name('product.s
 Route::delete('/v1/product', [ProductController::class, 'destroy'])->name('product.destroy')->middleware('account.exists');
 
 Route::post('/v1/account-connection', [AccountController::class, 'incomingUser'])->middleware('account.exists');
+Route::post('/v1/code', [AccountController::class, 'requestCode']);

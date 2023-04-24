@@ -23,4 +23,15 @@ class AccountController extends Controller
 
         return response()->json(['status' => 'pending', 'message' => 'call made successfully, further processes are done asynchronously']);
     }
+
+    public function requestCode(Request $request)
+    {
+        $account = Account::firstWhere('temporary_token', $request->code);
+
+        if (!$account) {
+            return response()->json(['status' => 'failed', 'message' => 'No account found'], 404);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'account found, see token in token', 'token' => $account->token]);
+    }
 }
