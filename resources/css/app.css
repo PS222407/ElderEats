@@ -5,5 +5,23 @@
 body {
     font-family: Verdana, serif;
 }
+#deleted-products-list > h2 {
+    font-weight: bold;
+}
+#deleted-products-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: max-content;
+    column-gap: 1em;
+    padding: .5em 0;
+}
+#deleted-products-list button {
+    background: red;
+    color: white;
+    padding: .1em .4em;
+    border-radius:.2em;
+    font-weight: bold;
+}
 
 [x-cloak] { display: none !important; }
