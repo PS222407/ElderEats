@@ -2,7 +2,7 @@
     <table class="mt-10 w-full text-xl">
         <tr class="text-center text-label">
             <th class="px-2">Product</th>
-            <th class="px-2">Houdsbaarheidsdatum</th>
+            <th class="px-2">Houdbaarheidsdatum</th>
         </tr>
         @foreach($products as $product)
             <tr class="border-b-2 @if($loop->first) border-t-2 @endif border-black text-center">

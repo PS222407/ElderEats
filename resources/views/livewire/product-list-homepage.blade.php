@@ -8,7 +8,7 @@
         <tr class="text-center text-label">
             <th class="px-2">Product</th>
             <th class="px-2">Aantal</th>
-            <th class="px-2">Houdsbaarheidsdatum</th>
+            <th class="px-2">Houdbaarheidsdatum</th>
         </tr>
         @foreach($products as $product)
             <tr class="@if($product->pivot->expiration_date == null) bg-gray-300 @elseif($product->pivot->expiration_date < now()) bg-red-300 @elseif($product->pivot->expiration_date < now()->addDays(2)) bg-yellow-300 @endif border-b-2 @if($loop->first) border-t-2 @endif border-black text-center">
