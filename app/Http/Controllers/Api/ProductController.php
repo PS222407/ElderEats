@@ -7,8 +7,10 @@ use App\Events\DeleteProductScanned;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Product;
+use App\Rules\Barcode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -17,6 +19,11 @@ class ProductController extends Controller
         $product = Product::firstWhere('barcode', $request->barcode);
         $account = Account::firstWhere('token', $request->account_token);
         $productFound = false;
+
+        $validator = Validator::make(['barcode' => $request->barcode], ['barcode' => new Barcode()]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 'failed', 'message' => 'invalid barcode']);
+        }
 
         if (!$product) {
             $response = Http::get(sprintf('https://world.openfoodfacts.org/api/v3/product/%s.json', $request->barcode), [
@@ -44,7 +51,7 @@ class ProductController extends Controller
         if ($productFound) {
             return response()->json(['status' => 'success', 'message' => 'product added successfully']);
         } else {
-            return response()->json(['status' => 'failed', 'message' => 'product not found']);
+            return response()->json(['status' => 'warning', 'message' => 'product not found, barcode is valid']);
         }
     }
 

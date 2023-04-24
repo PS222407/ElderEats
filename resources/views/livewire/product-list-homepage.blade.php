@@ -15,7 +15,7 @@
                 <td class="flex gap-x-4 items-center p-2">
                     <img src="{{ $product->image ?? asset('Images/No_Image_Available.jpg') }}" alt="product image" class="w-28 aspect-square object-contain">
                     <div>
-                        {{ $product->name }} - {{ $product->brand }} - {{ $product->quantity_in_package }}
+                        {{ implode(' - ', array_filter([$product->name, $product->brand, $product->quantity_in_package])) }}
                     </div>
                 </td>
                 <td>

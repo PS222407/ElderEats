@@ -64,11 +64,9 @@ Echo.channel('product-scanned-channel-' + account)
             let item = e.products[i];
 
             if (i === 0) {
-                const productNameContainer = document.createElement('div');
-                const text = document.createElement('div');
+                const text = document.createElement('h2');
                 text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
-                productNameContainer.appendChild(text);
-                list.appendChild(productNameContainer);
+                list.appendChild(text);
             }
 
             const container = document.createElement('div');
