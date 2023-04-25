@@ -28,7 +28,7 @@ class ProductListHomepage extends Component
             ->where('name', 'like', '%' . $this->search . '%')
             ->groupBy('id', 'expiration_date')
             ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
-            ->paginate(6);
+            ->paginate(4);
         DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
 
         return view('livewire.product-list-homepage', [
