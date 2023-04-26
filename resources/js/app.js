@@ -173,7 +173,7 @@ if (showAddToShoppingList) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'JA',
         cancelButtonText: 'NEE',
-        timer: 10000,
+        timer: 25000,
         timerProgressBar: true,
     }).then((result) => {
         if (result.isConfirmed) {
