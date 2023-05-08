@@ -23,5 +23,12 @@ body {
     border-radius:.2em;
     font-weight: bold;
 }
+.button-delete {
+    background-color: red !important;
+    color: white;
+    padding: .1em .4em;
+    border-radius:.2em;
+    font-weight: bold;
+}
 
 [x-cloak] { display: none !important; }

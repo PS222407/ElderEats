@@ -233,3 +233,21 @@ window.hideCode = function() {
     document.getElementById('display-qrcode').innerHTML = '';
     document.getElementById('close-sidenav-button').click();
 }
+
+document.addEventListener('delete-button-pressed', function (e) {
+    Swal.fire({
+        allowOutsideClick: false,
+        title: 'Verwijderen?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'JA',
+        cancelButtonText: "NEE",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.getElementById(e.detail.formId);
+            form.submit();
+        }
+    });
+})

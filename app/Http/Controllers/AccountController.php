@@ -9,6 +9,13 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AccountController extends Controller
 {
+    public function destroy(int $id)
+    {
+        Account::$accountModel->users()->detach([$id]);
+
+        return redirect('/');
+    }
+
     public function getTempToken()
     {
         $tempToken = Account::generateTempToken();

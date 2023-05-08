@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('welcome');
+Route::get('/', [HomepageController::class, 'index'])->name('welcome');
 
+Route::delete('/account/{id}', [AccountController::class, 'destroy'])->name('account.destroy');
 Route::get('/account/get-temporary-token', [AccountController::class, 'getTempToken'])->name('account.get-temporary-token');
 Route::post('/account/attach-user', [AccountController::class, 'attachUser']);
 
