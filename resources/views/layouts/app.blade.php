@@ -20,7 +20,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="antialiased">
+<body class="antialiased overflow-x-hidden">
     @include('layouts.nav')
     @yield('content')
     @livewireScripts

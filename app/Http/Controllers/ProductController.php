@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\Account;
+use App\Http\Requests\StoreProductManualRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Rules\Barcode;
@@ -14,10 +15,7 @@ class ProductController extends Controller
 {
     public function store(StoreProductRequest $request)
     {
-        Account::$accountModel->products()->create([
-            'name' => $request->name,
-            'barcode' => $request->ean,
-        ]);
+        Account::$accountModel->products()->create($request->validated());
 
         Session::flash('type', 'success');
 
@@ -59,5 +57,28 @@ class ProductController extends Controller
         Session::flash('ean', $ean);
 
         return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
+    }
+
+    public function addManualProduct(StoreProductManualRequest $request)
+    {
+        Account::$accountModel->products()->create($request->validated());
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
+    public function addManualExistingProduct(int $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return redirect('/');
+        }
+
+        Account::$accountModel->products()->attach($id);
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
     }
 }

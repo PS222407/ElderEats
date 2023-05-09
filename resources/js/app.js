@@ -15,20 +15,19 @@ const options = {
     closable: true,
 };
 const modal = new Modal($targetEl, options);
+const addProductModal = new Modal(document.getElementById('addProductModalEL'), options);
 
 const closeDeleteProductsButton = document.getElementById('close-delete-products-button');
 const closeDeleteProductsButton2 = document.getElementById('close-delete-products-button2');
-closeDeleteProductsButton?.addEventListener('click', function () {
-    modal.hide();
-});
-closeDeleteProductsButton2?.addEventListener('click', function () {
-    modal.hide();
-});
+closeDeleteProductsButton?.addEventListener('click', () => modal.hide());
+closeDeleteProductsButton2?.addEventListener('click', () => modal.hide());
+const closeAddProductsButton = document.getElementById('close-add-products-button');
+const closeAddProductsButton2 = document.getElementById('close-add-products-button2');
+closeAddProductsButton?.addEventListener('click', () => addProductModal.hide());
+closeAddProductsButton2?.addEventListener('click', () => addProductModal.hide());
 
-console.log(account)
 Echo.channel('product-scanned-channel-' + account)
     .listen('.add-product', (e) => {
-        console.log('hallo');
         if (e.productFound) {
             Swal.fire({
                 allowOutsideClick: false,
@@ -47,7 +46,7 @@ Echo.channel('product-scanned-channel-' + account)
                     "   <input type='hidden' name='_token' value='" + csrf + "' />" +
                     "   <input type='hidden' name='ean' value='" + e.ean + "' />" +
                     "   <input type='text' name='name' />" +
-                    "   <button type='submit'>Opslaan</button>" +
+                    "   <button type='submit' class='btn-primary'>Opslaan</button>" +
                     "</form>" +
                     "",
                 showConfirmButton: false,
@@ -251,3 +250,22 @@ document.addEventListener('delete-button-pressed', function (e) {
         }
     });
 })
+
+document.addEventListener('add-product-button-pressed', function (e) {
+    addProductModal.show();
+});
+document.addEventListener('add-non-existing-product-button-pressed', function (e) {
+    Swal.fire({
+        allowOutsideClick: false,
+        title: 'Voeg product toe',
+        html:
+            "<form action='/add-manually-product' method='post'>" +
+            "   <input type='hidden' name='_token' value='" + csrf + "' />" +
+            "   <input type='text' name='name' />" +
+            "   <button type='submit' class='btn-primary'>Opslaan</button>" +
+            "</form>",
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Annuleer',
+    })
+});
