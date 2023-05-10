@@ -17,7 +17,7 @@ class AddProductScanned implements ShouldBroadcast
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public bool $needsToSendNotification = false;
+    public bool $needsToSendNotification = true;
 
     /**
      * Create a new event instance.
