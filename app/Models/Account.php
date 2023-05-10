@@ -16,6 +16,11 @@ class Account extends Model
         'token',
         'temporary_token',
         'temporary_token_expires_at',
+        'notification_last_sent_at',
+    ];
+
+    protected $casts = [
+        'notification_last_sent_at' => 'datetime',
     ];
 
     public function users(): BelongsToMany
