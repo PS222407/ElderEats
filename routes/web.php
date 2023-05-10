@@ -26,4 +26,12 @@ Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/{ean}/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
 Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach']);
 
-//Route::view('/test', 'test');
+Route::post('/add-manually-product', [ProductController::class, 'addManualProduct']);
+Route::post('/add-manually-existing-product/{id}', [ProductController::class, 'addManualExistingProduct'])->name('product.add-manual-existing-product');
+
+//Route::get('/test', function (\Illuminate\Http\Request $request) {
+//});
+
+//Route::post('/broadcasting/auth', function () {
+//    return \App\Classes\Account::$accountModel;
+//});

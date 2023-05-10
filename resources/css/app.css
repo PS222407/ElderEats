@@ -31,4 +31,14 @@ body {
     font-weight: bold;
 }
 
+.btn-primary {
+    background-color: #0073de !important;
+    padding: 11px 20px;
+    color: white;
+    border-radius: 5px;
+}
+.btn-primary:hover {
+    background-color: #0059ad !important;
+}
+
 [x-cloak] { display: none !important; }

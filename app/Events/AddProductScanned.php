@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Account;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -12,7 +13,11 @@ use Illuminate\Queue\SerializesModels;
 
 class AddProductScanned implements ShouldBroadcast
 {
+    const NUMBER_OF_MINUTES = 10;
+
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public bool $needsToSendNotification = false;
 
     /**
      * Create a new event instance.
@@ -22,6 +27,17 @@ class AddProductScanned implements ShouldBroadcast
         public string $accountId,
         public bool $productFound
     ) {
+        $account = Account::find($this->accountId);
+        $lastSendAt = $account->notification_last_sent_at;
+        if ($lastSendAt) {
+            $minutes = $lastSendAt->diffInMinutes(now());
+            $this->needsToSendNotification = $minutes > self::NUMBER_OF_MINUTES;
+            if ($this->needsToSendNotification) {
+                $account->update([
+                    'notification_last_sent_at' => now(),
+                ]);
+            }
+        }
     }
 
     /**

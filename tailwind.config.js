@@ -13,6 +13,7 @@ module.exports = {
             'banner': '#519162',
             'label': '#777777',
             'hamburger': '#365F41',
+            'icon': '#7FCA95',
         },
     },
     plugins: [

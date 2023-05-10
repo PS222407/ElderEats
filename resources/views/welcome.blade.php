@@ -59,4 +59,7 @@
             </div>
         </div>
     </div>
+
+    <div class="btn hidden"></div>
+    @include('modals.product-added-modal')
 @endsection
