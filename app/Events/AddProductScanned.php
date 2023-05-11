@@ -32,11 +32,11 @@ class AddProductScanned implements ShouldBroadcast
         if ($lastSendAt) {
             $minutes = $lastSendAt->diffInMinutes(now());
             $this->needsToSendNotification = $minutes > self::NUMBER_OF_MINUTES;
-            if ($this->needsToSendNotification) {
-                $account->update([
-                    'notification_last_sent_at' => now(),
-                ]);
-            }
+        }
+        if ($this->needsToSendNotification) {
+            $account->update([
+                'notification_last_sent_at' => now(),
+            ]);
         }
     }
 
