@@ -13,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 class AddProductScanned implements ShouldBroadcast
 {
-    const NUMBER_OF_MINUTES = 10;
+    const NUMBER_OF_MINUTES = 0;
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
