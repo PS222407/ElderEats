@@ -38,6 +38,10 @@ class AddProductScanned implements ShouldBroadcast
                 'notification_last_sent_at' => now(),
             ]);
         }
+
+        if (self::NUMBER_OF_MINUTES <= 0) {
+            $this->needsToSendNotification = true;
+        }
     }
 
     /**
