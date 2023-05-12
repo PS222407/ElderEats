@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "flowbite": "^1.6.5",
+        "push.js": "^1.0.12",
         "sweetalert2": "^11.7.3"
     }
 }
