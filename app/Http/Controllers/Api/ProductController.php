@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreProductRequest;
 use App\Models\Account;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -18,7 +19,6 @@ class ProductController extends Controller
         $product = Product::firstWhere('barcode', $request->barcode);
         $account = Account::firstWhere('token', $request->account_token);
         $amount = $request->has('amount') ? (int)$request->amount : 1;
-        $productFound = false;
 
         if (!$product) {
             $response = Http::get(sprintf('https://world.openfoodfacts.org/api/v3/product/%s.json', $request->barcode), [
@@ -26,25 +26,27 @@ class ProductController extends Controller
             ]);
             $json = $response->json();
             if ($json['errors'] == []) {
-                $product = Product::create([
-                    'name' => $json['product']['product_name'],
-                    'brand' => $json['product']['brands'] ?? null,
-                    'quantity_in_package' => $json['product']['quantity'] ?? null,
-                    'barcode' => $request->barcode,
-                    'image' => $json['product']['image_url'] ?? null,
-                ]);
-
-                $productFound = true;
+                try {
+                    $product = Product::create([
+                        'name' => $json['product']['product_name'],
+                        'brand' => $json['product']['brands'] ?? null,
+                        'quantity_in_package' => $json['product']['quantity'] ?? null,
+                        'barcode' => $request->barcode,
+                        'image' => $json['product']['image_url'] ?? null,
+                    ]);
+                } catch (Exception $e) {
+                    $product = false;
+                }
             }
         }
 
-        if ($productFound) {
-            $account->products()->attach(array_fill(0, $request->amount, $product->id));
+        if ($product) {
+            $account->products()->attach(array_fill(0, $amount, $product->id));
         }
 
-        AddProductScanned::dispatch($request->barcode, $account->id, $productFound, $amount);
+        AddProductScanned::dispatch($request->barcode, $account->id, (bool)$product, $amount);
 
-        if ($productFound) {
+        if ($product) {
             return response()->json(['status' => 'success', 'message' => 'product added successfully']);
         } else {
             return response()->json(['status' => 'warning', 'message' => 'product not found, barcode is valid']);

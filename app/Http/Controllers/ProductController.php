@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $product = Product::create([
-            'ean' => $request->validated('ean'),
+            'barcode' => $request->validated('ean'),
             'name' => $request->validated('name'),
         ]);
 

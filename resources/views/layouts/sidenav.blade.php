@@ -62,20 +62,20 @@
         <div class="flex flex-col mx-auto px-5 mt-10">
             <h1 class="mb-4 font-extrabold">Instellingen</h1>
             <hr class="mb-4">
-            <h1 class="mb-4">Voer hier uw naam in (zichtbaar voor de familie)</h1>
+            <h1 class="mb-4">Voer hier uw naam in (zichtbaar voor de familie/verzogers)</h1>
             <form action="{{ route('account.update') }}" method="POST">
                 @csrf
                 @method('PUT')
                 <label class="mb-4" for="name">Naam</label>
                 <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountModel->name }}">
                 <button type="submit" class="button-name bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">Opslaan</button>
-            @error('name')
-            <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
-                <script>
-                    console.log(document.getElementById('open-settings-sidebar'));
-                    document.getElementById('open-settings-sidebar').click();
-                </script>
-            @enderror
+                @error('name')
+                    <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
+                    <script>
+                        console.log(document.getElementById('open-settings-sidebar'));
+                        document.getElementById('open-settings-sidebar').click();
+                    </script>
+                @enderror
             </form>
             <h1 class="mt-4">Beheer gekoppelde gebruikers</h1>
             <table>
