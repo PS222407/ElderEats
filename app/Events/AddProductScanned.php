@@ -9,7 +9,6 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Queue\SerializesModels;
 
 class AddProductScanned implements ShouldBroadcast
@@ -60,12 +59,4 @@ class AddProductScanned implements ShouldBroadcast
     {
         return 'add-product';
     }
-
-    public function toBroadcast(object $notifiable): BroadcastMessage
-    {
-        return new BroadcastMessage([
-            'account_id' => $this->accountId,
-        ]);
-    }
-
 }
