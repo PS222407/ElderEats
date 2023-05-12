@@ -17,6 +17,7 @@ class Account extends Model
         'temporary_token',
         'temporary_token_expires_at',
         'notification_last_sent_at',
+        'name',
     ];
 
     protected $casts = [

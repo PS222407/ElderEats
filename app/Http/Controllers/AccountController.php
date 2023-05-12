@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\Account;
 use App\Enums\ConnectionStatus;
 use App\Http\Requests\AttachUserRequest;
+use App\Http\Requests\UpdateAccountRequest;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AccountController extends Controller
@@ -36,9 +37,17 @@ class AccountController extends Controller
             Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
                 'status' => ConnectionStatus::CONNECTED,
             ]);
+
             return response()->json(['status' => 'success', 'message' => 'user successfully attached to account']);
         }
 
         return response()->json(['status' => 'failed', 'message' => 'user could not be attached to account']);
+    }
+
+    public function update(UpdateAccountRequest $request)
+    {
+        Account::$accountModel->update($request->validated());
+
+        return redirect('/');
     }
 }

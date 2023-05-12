@@ -21,6 +21,7 @@ Route::get('/', [HomepageController::class, 'index'])->name('welcome');
 Route::delete('/account/{id}', [AccountController::class, 'destroy'])->name('account.destroy');
 Route::get('/account/get-temporary-token', [AccountController::class, 'getTempToken'])->name('account.get-temporary-token');
 Route::post('/account/attach-user', [AccountController::class, 'attachUser']);
+Route::put('/account', [AccountController::class, 'update'])->name('account.update');
 
 Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/{ean}/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
