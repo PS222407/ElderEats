@@ -70,10 +70,11 @@
                 <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountModel->name }}">
                 <button type="submit" class="button-name bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">Opslaan</button>
             @error('name')
-            <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
+                <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
                 <script>
-                    console.log(document.getElementById('open-settings-sidebar'));
-                    document.getElementById('open-settings-sidebar').click();
+                    setTimeout(function () {
+                        document.getElementById('open-settings-sidebar').click();
+                    }, 200);
                 </script>
             @enderror
             </form>
