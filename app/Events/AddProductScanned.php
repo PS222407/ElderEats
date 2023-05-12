@@ -25,7 +25,8 @@ class AddProductScanned implements ShouldBroadcast
     public function __construct(
         public string $ean,
         public string $accountId,
-        public bool $productFound
+        public bool $productFound,
+        public int $amount,
     ) {
         $account = Account::find($this->accountId);
         $lastSendAt = $account->notification_last_sent_at;

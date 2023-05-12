@@ -15,7 +15,12 @@ class ProductController extends Controller
 {
     public function store(StoreProductRequest $request)
     {
-        Account::$accountModel->products()->create($request->validated());
+        $product = Product::create([
+            'ean' => $request->validated('ean'),
+            'name' => $request->validated('name'),
+        ]);
+
+        Account::$accountModel->products()->attach(array_fill(0, $request->validated('amount'), $product->id));
 
         Session::flash('type', 'success');
 

@@ -17,6 +17,7 @@ class StoreProductRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'ean' => ['required', new Barcode()],
+            'amount' => ['required', 'integer'],
         ];
     }
 }

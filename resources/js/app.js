@@ -45,11 +45,14 @@ Echo.channel('product-scanned-channel-' + account)
                     "<form action='/products' method='post'>" +
                     "   <input type='hidden' name='_token' value='" + csrf + "' />" +
                     "   <input type='hidden' name='ean' value='" + e.ean + "' />" +
+                    "   <input type='hidden' name='amount' value='" + e.amount + "' />" +
                     "   <input type='text' name='name' />" +
                     "   <button type='submit' class='btn-primary'>Opslaan</button>" +
                     "</form>" +
                     "",
                 showConfirmButton: false,
+                showCancelButton: true,
+                cancelButtonText: 'Annuleer',
             })
         }
         Livewire.emit('livewireRefreshProductListHomepage');
