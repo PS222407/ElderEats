@@ -24,7 +24,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'barcode' => [new Barcode()],
-            'amount' => ['nullable', 'integer', 'max:100'],
+            'amount' => ['nullable', 'integer', 'max:50'],
         ];
     }
 }
