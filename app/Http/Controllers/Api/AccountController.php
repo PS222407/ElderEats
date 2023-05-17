@@ -6,6 +6,7 @@ use App\Events\UserAccountRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -26,6 +27,8 @@ class AccountController extends Controller
 
     public function requestCode(Request $request)
     {
+        Log::channel('api')->info($request->all());
+
         $account = Account::firstWhere('temporary_token', $request->code);
 
         if (!$account) {

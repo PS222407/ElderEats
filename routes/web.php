@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,8 +31,9 @@ Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach']
 Route::post('/add-manually-product', [ProductController::class, 'addManualProduct']);
 Route::post('/add-manually-existing-product/{id}', [ProductController::class, 'addManualExistingProduct'])->name('product.add-manual-existing-product');
 
-//Route::get('/test', function (\Illuminate\Http\Request $request) {
-//});
+Route::get('/test', function (\Illuminate\Http\Request $request) {
+    Log::channel('api')->info($request->all());
+});
 
 //Route::post('/broadcasting/auth', function () {
 //    return \App\Classes\Account::$accountModel;
