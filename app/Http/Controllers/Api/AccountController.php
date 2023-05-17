@@ -13,8 +13,6 @@ class AccountController extends Controller
 {
     public function incomingUser(Request $request)
     {
-        Log::channel('api')->info($request->all());
-
         $account = Account::firstWhere('token', $request->account_token);
         $usersInProcess = $account->usersInProcess;
         $user = $usersInProcess->last();
@@ -30,8 +28,6 @@ class AccountController extends Controller
 
     public function requestCode(RequestCodeRequest $request)
     {
-        Log::channel('api')->info($request->all());
-
         $account = Account::firstWhere('temporary_token', $request->code);
 
         if (!$account) {
