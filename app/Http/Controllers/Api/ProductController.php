@@ -11,11 +11,14 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     public function store(StoreProductRequest $request)
     {
+        Log::channel('api')->info($request->all());
+
         $product = Product::firstWhere('barcode', $request->barcode);
         $account = Account::firstWhere('token', $request->account_token);
         $amount = $request->has('amount') ? (int)$request->amount : 1;
@@ -54,6 +57,8 @@ class ProductController extends Controller
 
     public function destroy(Request $request)
     {
+        Log::channel('api')->info($request->all());
+
         $product = Product::firstWhere('barcode', $request->barcode);
         if (!$product) {
             return response()->json(['status' => 'failed', 'message' => 'product not found']);

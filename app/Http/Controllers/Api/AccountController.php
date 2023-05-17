@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\UserAccountRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RequestCodeRequest;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,8 @@ class AccountController extends Controller
 {
     public function incomingUser(Request $request)
     {
+        Log::channel('api')->info($request->all());
+
         $account = Account::firstWhere('token', $request->account_token);
         $usersInProcess = $account->usersInProcess;
         $user = $usersInProcess->last();
@@ -25,7 +28,7 @@ class AccountController extends Controller
         return response()->json(['status' => 'pending', 'message' => 'call made successfully, further processes are done asynchronously']);
     }
 
-    public function requestCode(Request $request)
+    public function requestCode(RequestCodeRequest $request)
     {
         Log::channel('api')->info($request->all());
 
