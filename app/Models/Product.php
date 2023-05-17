@@ -21,7 +21,7 @@ class Product extends Model
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn() => implode(' - ', array_filter([$this->name, $this->brand, $this->quantity_in_package])),
+            get: fn () => implode(' - ', array_filter([$this->name, $this->brand, $this->quantity_in_package])),
         );
     }
 }

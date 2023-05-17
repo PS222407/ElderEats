@@ -45,7 +45,7 @@ class ProductController extends Controller
     public function detach(int $pivotId)
     {
         $accountPivotIds = Account::$accountModel->activeProducts->pluck('pivot.id')->toArray();
-        $authorized = in_array($pivotId, $accountPivotIds);
+        $authorized = in_array($pivotId, $accountPivotIds, true);
 
         $row = DB::table('account_products')->where('id', $pivotId)?->first();
         if (!$row) {

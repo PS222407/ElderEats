@@ -48,9 +48,8 @@ class ProductController extends Controller
 
         if ($product) {
             return response()->json(['status' => 'success', 'message' => 'product added successfully']);
-        } else {
-            return response()->json(['status' => 'warning', 'message' => 'product not found, barcode is valid']);
         }
+        return response()->json(['status' => 'warning', 'message' => 'product not found, barcode is valid']);
     }
 
     public function destroy(Request $request)

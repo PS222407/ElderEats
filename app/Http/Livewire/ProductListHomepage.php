@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Classes\Account;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,7 +16,6 @@ class ProductListHomepage extends Component
     protected $listeners = ['livewireRefreshProductListHomepage' => 'render'];
 
     public $search;
-
 
     public function render()
     {

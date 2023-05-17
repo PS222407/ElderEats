@@ -7,7 +7,7 @@ use App\Models\Account as AccountModel;
 
 class Account
 {
-    static ?AccountModel $accountModel = null;
+    public static ?AccountModel $accountModel = null;
 
     public static function generateTempToken(): string
     {

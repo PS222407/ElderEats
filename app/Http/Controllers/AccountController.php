@@ -20,7 +20,7 @@ class AccountController extends Controller
     public function getTempToken()
     {
         $tempToken = Account::generateTempToken();
-//        $svg = QrCode::backgroundColor(0,0,0,0)->color(255,255,255)->size(250)->generate($tempToken);
+        // $svg = QrCode::backgroundColor(0,0,0,0)->color(255,255,255)->size(250)->generate($tempToken);
         $svg = QrCode::size(250)->generate($tempToken);
 
         return response()->json([
@@ -33,7 +33,7 @@ class AccountController extends Controller
     {
         $usersInProcess = Account::$accountModel->usersInProcess->pluck('id')->toArray();
 
-        if (in_array($request->userId, $usersInProcess)) {
+        if (in_array($request->userId, $usersInProcess, true)) {
             Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
                 'status' => ConnectionStatus::CONNECTED,
             ]);

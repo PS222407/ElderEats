@@ -21,7 +21,9 @@ class AccountProductsCrud extends Component
             'date' => ['date'],
         ]);
 
-        if ($validator->fails()) return;
+        if ($validator->fails()) {
+            return;
+        }
 
         DB::table('account_products')
             ->where('id', $id)
