@@ -33,7 +33,7 @@ class AccountController extends Controller
     {
         $usersInProcess = Account::$accountModel->usersInProcess->pluck('id')->toArray();
 
-        if (in_array($request->userId, $usersInProcess, true)) {
+        if (in_array((int)$request->userId, $usersInProcess, true)) {
             Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
                 'status' => ConnectionStatus::CONNECTED,
             ]);

@@ -34,6 +34,11 @@ class Account extends Model
         return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', ConnectionStatus::IN_PROCESS)->withTimestamps();
     }
 
+    public function usersConnected(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'account_users')->wherePivot('status', ConnectionStatus::CONNECTED)->withTimestamps();
+    }
+
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'account_products')->withPivot(['id', 'expiration_date', 'ran_out_at'])->withTimestamps();
