@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\ProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\PusherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +25,5 @@ Route::delete('/v1/product', [ProductController::class, 'destroy'])->name('produ
 
 Route::post('/v1/account-connection', [AccountController::class, 'incomingUser'])->middleware('account.exists');
 Route::post('/v1/code', [AccountController::class, 'requestCode']);
+
+Route::get('/v1/pusher/{id}', [PusherController::class, 'getById']);

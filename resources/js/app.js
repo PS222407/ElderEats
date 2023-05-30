@@ -58,36 +58,48 @@ Echo.channel('product-scanned-channel-' + account)
         Livewire.emit('livewireRefreshProductListHomepage');
     })
     .listen('.delete-product', (e) => {
-        const list = document.getElementById('deleted-products-list');
-        if (!list) return;
-        list.innerHTML = "";
+        console.log(e.pusherId);
+        axios.get(`api/v1/pusher/${e.pusherId}`)
+            .then(function (response) {
+                console.log(response)
+                if (response.status === 200) {
+                    const list = document.getElementById('deleted-products-list');
+                    if (!list) return;
+                    list.innerHTML = "";
 
-        for (let i = 0; i < e.products.length; i++) {
-            let item = e.products[i];
+                    let products = JSON.parse(response.data.pusherContent);
 
-            if (i === 0) {
-                const text = document.createElement('h2');
-                text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
-                list.appendChild(text);
-            }
+                    for (let i = 0; i < products.length; i++) {
+                        let item = products[i];
 
-            const container = document.createElement('div');
-            const el = document.createElement('div');
+                        if (i === 0) {
+                            const text = document.createElement('h2');
+                            text.innerText = item.name + ' ' + item.brand + ' ' + item.quantity_in_package;
+                            list.appendChild(text);
+                        }
 
-            el.innerText = dateStringToHumanNL(item.pivot.expiration_date);
-            const form = createDeleteProductForm(item.pivot.id);
+                        const container = document.createElement('div');
+                        const el = document.createElement('div');
 
-            container.appendChild(el);
-            container.appendChild(form);
+                        el.innerText = dateStringToHumanNL(item.pivot.expiration_date);
+                        const form = createDeleteProductForm(item.pivot.id);
 
-            list.appendChild(container);
-        }
+                        container.appendChild(el);
+                        container.appendChild(form);
 
-        if (e.products.length <= 0) {
-            list.innerHTML = "Er zijn geen producten om te verwijderen"
-        }
+                        list.appendChild(container);
+                    }
 
-        modal.show();
+                    if (products.length <= 0) {
+                        list.innerHTML = "Er zijn geen producten om te verwijderen"
+                    }
+
+                    modal.show();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     });
 
 Echo.channel('user-account-requests-' + account)

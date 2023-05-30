@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestCodeRequest;
 use App\Models\Account;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {

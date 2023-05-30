@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreProductRequest;
 use App\Models\Account;
 use App\Models\Product;
+use App\Models\Pusher;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -62,7 +63,11 @@ class ProductController extends Controller
         $account = Account::firstWhere('token', $request->account_token);
         $products = $account->activeProducts()->where('product_id', $product->id)->get()->toArray();
 
-        DeleteProductScanned::dispatch($products, $account->id);
+        $pusher = Pusher::create([
+            'content' => json_encode($products),
+        ]);
+
+        DeleteProductScanned::dispatch($pusher->id, $account->id);
 
         return response()->json(['status' => 'pending', 'message' => 'call made successfully, further processes are done asynchronously']);
     }

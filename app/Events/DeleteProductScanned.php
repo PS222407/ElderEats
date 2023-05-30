@@ -18,7 +18,7 @@ class DeleteProductScanned implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct(
-        public array $products,
+        public int $pusherId,
         public string $accountId,
     ) {
     }
