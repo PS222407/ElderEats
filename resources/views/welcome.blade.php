@@ -45,7 +45,7 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-6 space-y-6">
+                <div class="p-6 space-y-6" style="overflow-x: scroll; max-height: 487px">
                     <div id="deleted-products-list" class="flex flex-col gap-y-2">
 
                     </div>
