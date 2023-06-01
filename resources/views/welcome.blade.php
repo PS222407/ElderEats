@@ -17,6 +17,20 @@
         <div id="show-success-alert"></div>
     @endif
 
+{{--    <button onclick="play('{{ asset('mp3/barbaar.mp3') }}');">--}}
+{{--        barbaar--}}
+{{--    </button>--}}
+{{--    <button id="alert-sound" onclick="play('{{ asset('mp3/alert.mp3') }}');">--}}
+{{--        alert--}}
+{{--    </button>--}}
+
+{{--    <script defer>--}}
+{{--        window.play = function (name) {--}}
+{{--            audio = new Audio(`${name}`);--}}
+{{--            audio.play();--}}
+{{--        }--}}
+{{--    </script>--}}
+
     <script>
         let timeoutArray = [];
 

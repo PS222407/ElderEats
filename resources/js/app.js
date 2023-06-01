@@ -155,6 +155,10 @@ function createDeleteProductForm(pivotId) {
     deleteButton.type = 'button';
     deleteButton.textContent = 'Verwijder';
     deleteButton.addEventListener('click', () => {
+        let audio = new Audio(`mp3/alert.mp3`);
+        audio.volume = 1;
+        audio.play();
+
         Swal.fire({
             allowOutsideClick: false,
             title: 'Verwijderen?',
