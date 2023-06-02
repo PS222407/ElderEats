@@ -55,13 +55,6 @@ return [
             // ],
         ],
 
-        'postmark' => [
-            'transport' => 'postmark',
-            // 'client' => [
-            //     'timeout' => 5,
-            // ],
-        ],
-
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
@@ -97,8 +90,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply.eldereats@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'Elder Eats'),
     ],
 
     /*
