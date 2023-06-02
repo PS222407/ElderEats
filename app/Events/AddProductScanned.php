@@ -2,12 +2,16 @@
 
 namespace App\Events;
 
+use App\Mail\NewProductAdded;
 use App\Models\Account;
+use Exception;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AddProductScanned implements ShouldBroadcast
 {
@@ -24,10 +28,10 @@ class AddProductScanned implements ShouldBroadcast
     public function __construct(
         public string $ean,
         public string $accountId,
-        public bool $productFound,
-        public int $amount,
+        public bool   $productFound,
+        public int    $amount,
     ) {
-        $account = Account::find($this->accountId);
+        $account = Account::with('usersConnected')->find($this->accountId);
         $lastSendAt = $account->notification_last_sent_at;
         if ($lastSendAt) {
             $minutes = $lastSendAt->diffInMinutes(now());
@@ -42,8 +46,16 @@ class AddProductScanned implements ShouldBroadcast
         if (self::NUMBER_OF_MINUTES <= 0) {
             $this->needsToSendNotification = true;
         }
+        if ($this->needsToSendNotification) {
+            try {
+                foreach ($account->usersConnected as $recipient) {
+                    Mail::to($recipient)->send(new NewProductAdded());
+                }
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+        }
     }
-
     /**
      * Get the channels the event should broadcast on.
      *
@@ -52,7 +64,7 @@ class AddProductScanned implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('product-scanned-channel-'.$this->accountId),
+            new Channel('product-scanned-channel-' . $this->accountId),
         ];
     }
 
