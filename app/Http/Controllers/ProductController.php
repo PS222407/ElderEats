@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Classes\Account;
 use App\Http\Requests\StoreProductManualRequest;
 use App\Http\Requests\StoreProductRequest;
+use App\Mail\NewProductAdded;
 use App\Models\Product;
 use App\Rules\Barcode;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Validator;
 
@@ -81,6 +85,14 @@ class ProductController extends Controller
         }
 
         Account::$accountModel->products()->attach($id);
+
+        try {
+            foreach (Account::$accountModel->usersConnected as $recipient) {
+                Mail::to($recipient)->send(new NewProductAdded());
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
 
         Session::flash('type', 'success');
 
