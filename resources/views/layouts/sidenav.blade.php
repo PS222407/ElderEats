@@ -61,7 +61,7 @@
         <div class="flex flex-col mx-auto px-5 mt-10">
             <h1 class="mb-4 font-extrabold">Instellingen</h1>
             <hr class="mb-4">
-            <h1 class="mb-4">Voer hier uw naam in (zichtbaar voor de familie/verzogers)</h1>
+            <h1 class="mb-4">Voer hier uw naam in (zichtbaar voor de familie/verzorgers)</h1>
             <form action="{{ route('account.update') }}" method="POST">
                 @csrf
                 @method('PUT')
