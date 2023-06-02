@@ -275,9 +275,17 @@ document.addEventListener('delete-button-pressed', function (e) {
 })
 
 document.addEventListener('add-product-button-pressed', function (e) {
+    let audio = new Audio(`mp3/clashKingTile.mp3`);
+    audio.volume = 1;
+    audio.play();
+
     addProductModal.show();
 });
 document.addEventListener('add-non-existing-product-button-pressed', function (e) {
+    let audio = new Audio(`mp3/clashKingTile.mp3`);
+    audio.volume = 1;
+    audio.play();
+
     Swal.fire({
         allowOutsideClick: false,
         title: 'Voeg product toe',
