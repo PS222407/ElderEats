@@ -253,6 +253,10 @@ window.hideCode = function() {
 }
 
 document.addEventListener('delete-button-pressed', function (e) {
+    let audio = new Audio(`mp3/alert.mp3`);
+    audio.volume = 1;
+    audio.play();
+
     Swal.fire({
         allowOutsideClick: false,
         title: 'Verwijderen?',
