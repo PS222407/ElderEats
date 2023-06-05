@@ -26,6 +26,14 @@ const closeAddProductsButton2 = document.getElementById('close-add-products-butt
 closeAddProductsButton?.addEventListener('click', () => addProductModal.hide());
 closeAddProductsButton2?.addEventListener('click', () => addProductModal.hide());
 
+function playSound(name) {
+    if (soundFeatureStatus()) {
+        let audio = new Audio(`mp3/${name}.mp3`);
+        audio.volume = 1;
+        audio.play();
+    }
+}
+
 Echo.channel('product-scanned-channel-' + account)
     .listen('.add-product', (e) => {
         if (e.productFound) {
@@ -155,9 +163,7 @@ function createDeleteProductForm(pivotId) {
     deleteButton.type = 'button';
     deleteButton.textContent = 'Verwijder';
     deleteButton.addEventListener('click', () => {
-        let audio = new Audio(`mp3/alert.mp3`);
-        audio.volume = 1;
-        audio.play();
+        playSound('alert');
 
         Swal.fire({
             allowOutsideClick: false,
@@ -253,9 +259,7 @@ window.hideCode = function() {
 }
 
 document.addEventListener('delete-button-pressed', function (e) {
-    let audio = new Audio(`mp3/alert.mp3`);
-    audio.volume = 1;
-    audio.play();
+    playSound('alert');
 
     Swal.fire({
         allowOutsideClick: false,
@@ -275,16 +279,12 @@ document.addEventListener('delete-button-pressed', function (e) {
 })
 
 document.addEventListener('add-product-button-pressed', function (e) {
-    let audio = new Audio(`mp3/clashKingTile.mp3`);
-    audio.volume = 1;
-    audio.play();
+    playSound('clashKingTile');
 
     addProductModal.show();
 });
 document.addEventListener('add-non-existing-product-button-pressed', function (e) {
-    let audio = new Audio(`mp3/clashKingTile.mp3`);
-    audio.volume = 1;
-    audio.play();
+    playSound('clashKingTile');
 
     Swal.fire({
         allowOutsideClick: false,
@@ -300,3 +300,49 @@ document.addEventListener('add-non-existing-product-button-pressed', function (e
         cancelButtonText: 'Annuleer',
     })
 });
+
+window.toggleSound = function () {
+    setCookie('sound', !soundFeatureStatus(), 9999);
+
+    if (getCookie('sound') === "false") {
+        document.getElementById('sound-off').style.display = "block";
+        document.getElementById('sound-on').style.display = "none";
+    } else {
+        document.getElementById('sound-off').style.display = "none";
+        document.getElementById('sound-on').style.display = "block";
+    }
+}
+
+function soundFeatureStatus() {
+    if (!cookieExists('sound')) {
+        return true;
+    } else {
+        return getCookie('sound') === 'true';
+    }
+}
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function cookieExists(cname) {
+    return getCookie(cname) !== "";
+}
