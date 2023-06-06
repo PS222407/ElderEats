@@ -346,3 +346,8 @@ function getCookie(cname) {
 function cookieExists(cname) {
     return getCookie(cname) !== "";
 }
+
+window.productDetailModal = function (id) {
+    const el = document.getElementById(id);
+    el.showModal();
+}
