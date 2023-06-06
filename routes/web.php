@@ -26,7 +26,7 @@ Route::put('/account', [AccountController::class, 'update'])->name('account.upda
 
 Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/{ean}/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
-Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach']);
+Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach'])->name('products.pivotId.detach');
 
 Route::post('/add-manually-product', [ProductController::class, 'addManualProduct']);
 Route::post('/add-manually-existing-product/{id}', [ProductController::class, 'addManualExistingProduct'])->name('product.add-manual-existing-product');
