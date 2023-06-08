@@ -16,6 +16,7 @@ const options = {
 };
 const modal = new Modal($targetEl, options);
 const addProductModal = new Modal(document.getElementById('addProductModalEL'), options);
+const addProductModalShoppingList = new Modal(document.getElementById('addProductModalShoppingListEL'), options);
 
 const closeDeleteProductsButton = document.getElementById('close-delete-products-button');
 const closeDeleteProductsButton2 = document.getElementById('close-delete-products-button2');
@@ -26,6 +27,10 @@ const closeAddProductsButton2 = document.getElementById('close-add-products-butt
 closeAddProductsButton?.addEventListener('click', () => addProductModal.hide());
 closeAddProductsButton2?.addEventListener('click', () => addProductModal.hide());
 
+const closeAddProductsButton_S = document.getElementById('close-add-products-button-s');
+const closeAddProductsButton2_S = document.getElementById('close-add-products-button2-s');
+closeAddProductsButton_S?.addEventListener('click', () => addProductModalShoppingList.hide());
+closeAddProductsButton2_S?.addEventListener('click', () => addProductModalShoppingList.hide());
 function playSound(name) {
     if (soundFeatureStatus()) {
         let audio = new Audio(`mp3/${name}.mp3`);
@@ -259,7 +264,7 @@ window.hideCode = function() {
 }
 
 document.addEventListener('delete-button-pressed', function (e) {
-    playSound('alert');
+    //playSound('alert');
 
     Swal.fire({
         allowOutsideClick: false,
@@ -279,18 +284,41 @@ document.addEventListener('delete-button-pressed', function (e) {
 })
 
 document.addEventListener('add-product-button-pressed', function (e) {
-    playSound('clashKingTile');
+    //playSound('clashKingTile');
 
     addProductModal.show();
 });
+document.addEventListener('add-product-shoppinglist-button-pressed', function (e) {
+    //playSound('clashKingTile');
+
+    addProductModalShoppingList.show();
+});
 document.addEventListener('add-non-existing-product-button-pressed', function (e) {
-    playSound('clashKingTile');
+    //playSound('clashKingTile');
 
     Swal.fire({
         allowOutsideClick: false,
         title: 'Voeg product toe',
         html:
             "<form action='/add-manually-product' method='post'>" +
+            "   <input type='hidden' name='_token' value='" + csrf + "' />" +
+            "   <input type='text' name='name' />" +
+            "   <button type='submit' class='btn-primary'>Opslaan</button>" +
+            "</form>",
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Annuleer',
+    })
+});
+
+document.addEventListener('add-non-existing-product-button-pressed-shoppingList', function (e) {
+    //playSound('clashKingTile');
+
+    Swal.fire({
+        allowOutsideClick: false,
+        title: 'Voeg product toe',
+        html:
+            "<form action='/add-manually-product-shoppinglist' method='post'>" +
             "   <input type='hidden' name='_token' value='" + csrf + "' />" +
             "   <input type='text' name='name' />" +
             "   <button type='submit' class='btn-primary'>Opslaan</button>" +

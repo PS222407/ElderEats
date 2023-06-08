@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Arr;
 use Validator;
 
 class ProductController extends Controller
@@ -77,6 +78,21 @@ class ProductController extends Controller
         return redirect('/');
     }
 
+    public function addManualProductShoppingList(StoreProductManualRequest $request)
+    {
+
+        // dd(Arr::collapse([$request->validated(),['is_active' => 1]]));
+        //Account::$accountModel->shoppingListWithoutTimestamps()->create(Arr::collapse([$request->validated(),['is_active' => 1]]));
+
+
+        $product = Product::create($request->validated());
+        Account::$accountModel->shoppingListWithoutTimestamps()->attach($product->id,['is_active' => 1]);
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
     public function addManualExistingProduct(int $id)
     {
         $product = Product::find($id);
@@ -93,6 +109,21 @@ class ProductController extends Controller
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
+    public function addManualExistingProductShoppingList(int $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return redirect('/');
+        }
+
+        //dd( Account::$accountModel->shoppingList());
+        Account::$accountModel->shoppingListWithoutTimestamps()->attach($id,['is_active' => 1]);
 
         Session::flash('type', 'success');
 
