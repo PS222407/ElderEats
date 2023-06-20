@@ -9,7 +9,7 @@ class ShowShoppingList extends Component
 {
     public function render()
     {
-        $products =  Account::$accountModel->shoppingListWithoutTimestamps()->get();
+        $products =  \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->get();
 
         //dd($products);
 

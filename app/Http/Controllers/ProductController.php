@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Arr;
 use Validator;
 
 class ProductController extends Controller
@@ -80,13 +79,8 @@ class ProductController extends Controller
 
     public function addManualProductShoppingList(StoreProductManualRequest $request)
     {
-
-        // dd(Arr::collapse([$request->validated(),['is_active' => 1]]));
-        //Account::$accountModel->shoppingListWithoutTimestamps()->create(Arr::collapse([$request->validated(),['is_active' => 1]]));
-
-
         $product = Product::create($request->validated());
-        Account::$accountModel->shoppingListWithoutTimestamps()->attach($product->id,['is_active' => 1]);
+        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($product->id, ['is_active' => 1]);
 
         Session::flash('type', 'success');
 
@@ -123,7 +117,7 @@ class ProductController extends Controller
         }
 
         //dd( Account::$accountModel->shoppingList());
-        Account::$accountModel->shoppingListWithoutTimestamps()->attach($id,['is_active' => 1]);
+        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($id, ['is_active' => 1]);
 
         Session::flash('type', 'success');
 

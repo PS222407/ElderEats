@@ -27,7 +27,7 @@ class ProductListHomepage extends Component
 
     public function mount()
     {
-//        $this->productsData = $this->loadProducts();
+        //        $this->productsData = $this->loadProducts();
     }
 
 //    public function nextPage()

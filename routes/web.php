@@ -33,7 +33,6 @@ Route::post('/add-manually-product-shoppinglist', [ProductController::class, 'ad
 Route::post('/add-manually-existing-product/{id}', [ProductController::class, 'addManualExistingProduct'])->name('product.add-manual-existing-product');
 Route::post('/add-manually-existing-product-shoppinglist/{id}', [ProductController::class, 'addManualExistingProductShoppingList'])->name('product.add-manual-existing-product-shoppinglist');
 
-
 Route::get('/test', function (\Illuminate\Http\Request $request) {
     Log::channel('api')->info($request->all());
 });

@@ -1,5 +1,5 @@
 <div class="">
-   
+
     @foreach($products as $product)
     <tr class="">
         <td>
@@ -9,7 +9,7 @@
             @else
             <div class=" bg-gray-100">
             @endif
-            
+
             {{$product->name}}
             @if(!is_null($product->brand))
             - {{$product->brand}}

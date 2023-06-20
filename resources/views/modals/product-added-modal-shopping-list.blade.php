@@ -30,7 +30,7 @@
             <div class="h-modal">
                 <h3 class=" mb-2">boodschappen lijst:</h3>
             <div class=" border">
-                
+
                 @livewire('show-shopping-list')
             </div>
             </div>

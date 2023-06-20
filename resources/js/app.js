@@ -264,7 +264,7 @@ window.hideCode = function() {
 }
 
 document.addEventListener('delete-button-pressed', function (e) {
-    //playSound('alert');
+    playSound('alert');
 
     Swal.fire({
         allowOutsideClick: false,
@@ -284,17 +284,17 @@ document.addEventListener('delete-button-pressed', function (e) {
 })
 
 document.addEventListener('add-product-button-pressed', function (e) {
-    //playSound('clashKingTile');
+    playSound('clashKingTile');
 
     addProductModal.show();
 });
 document.addEventListener('add-product-shoppinglist-button-pressed', function (e) {
-    //playSound('clashKingTile');
+    playSound('clashKingTile');
 
     addProductModalShoppingList.show();
 });
 document.addEventListener('add-non-existing-product-button-pressed', function (e) {
-    //playSound('clashKingTile');
+    playSound('clashKingTile');
 
     Swal.fire({
         allowOutsideClick: false,
@@ -312,7 +312,7 @@ document.addEventListener('add-non-existing-product-button-pressed', function (e
 });
 
 document.addEventListener('add-non-existing-product-button-pressed-shoppingList', function (e) {
-    //playSound('clashKingTile');
+    playSound('clashKingTile');
 
     Swal.fire({
         allowOutsideClick: false,
