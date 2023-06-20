@@ -12,7 +12,7 @@ class AccountController extends Controller
 {
     public function destroy(int $id)
     {
-        Account::$accountModel->users()->detach([$id]);
+        Account::$accountEntity->users()->detach([$id]);
 
         return redirect('/');
     }
@@ -31,10 +31,10 @@ class AccountController extends Controller
 
     public function attachUser(AttachUserRequest $request)
     {
-        $usersInProcess = Account::$accountModel->usersInProcess->pluck('id')->toArray();
+        $usersInProcess = Account::$accountEntity->usersInProcess->pluck('id')->toArray();
 
         if (in_array((int)$request->userId, $usersInProcess, true)) {
-            Account::$accountModel->usersInProcess()->updateExistingPivot($request->userId, [
+            Account::$accountEntity->usersInProcess()->updateExistingPivot($request->userId, [
                 'status' => ConnectionStatus::CONNECTED,
             ]);
 
@@ -46,7 +46,7 @@ class AccountController extends Controller
 
     public function update(UpdateAccountRequest $request)
     {
-        Account::$accountModel->update($request->validated());
+        Account::$accountEntity->update($request->validated());
 
         return redirect('/');
     }

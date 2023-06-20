@@ -36,7 +36,7 @@ class AccountProductsCrud extends Component
 
     public function render()
     {
-        $products = Account::$accountModel->activeProducts()->orderBy('expiration_date')->paginate(6);
+        $products = Account::$accountEntity->activeProducts()->orderBy('expiration_date')->paginate(6);
 
         return view('livewire.account-products-crud', [
             'products' => $products,

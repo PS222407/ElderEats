@@ -9,7 +9,7 @@ class HomepageController extends Controller
     public function index()
     {
         return view('welcome', [
-            'connectedUsers' => Account::$accountModel->usersConnected,
+            'connectedUsers' => Account::$accountEntity?->loadConnectedUsers(),
         ]);
     }
 }

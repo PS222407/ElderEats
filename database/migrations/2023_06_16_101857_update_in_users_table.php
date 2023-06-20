@@ -10,10 +10,8 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('pushers', function (Blueprint $table) {
-            $table->id();
-            $table->longText('content');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('token')->after('remember_token');
         });
     }
 
@@ -22,6 +20,8 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('pushers');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -85,7 +85,7 @@
                 @csrf
                 @method('PUT')
                 <label class="mb-4" for="name">Naam</label>
-                <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountModel->name }}">
+                <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountEntity->name }}">
                 <button type="submit" class="button-name bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">Opslaan</button>
                 @error('name')
                     <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
@@ -97,16 +97,16 @@
             </form>
             <h1 class="mt-4">Beheer gekoppelde gebruikers</h1>
             <table>
-            @foreach($connectedUsers as $connectedUser)
+            @foreach($connectedUsers ?? [] as $connectedUser)
                 <tr class="border border-black border-l-0 border-r-0">
-                    <td class="py-3 pl-2">{{ $connectedUser->name }}</td>
+                    <td class="py-3 pl-2">{{ $connectedUser->user->name }}</td>
                     <td class="py-3">
-                        <form action="{{ route('account.destroy', ['id' => $connectedUser->id]) }}" method="POST" id="form-delete-{{ $connectedUser->id }}">
+                        <form action="{{ route('account.destroy', ['id' => $connectedUser->user->id]) }}" method="POST" id="form-delete-{{ $connectedUser->user->id }}">
                             @csrf
                             @method('DELETE')
                             <button type="button"
                                     class="button-delete"
-                                    onclick="document.dispatchEvent(new CustomEvent('delete-button-pressed', { detail: { 'formId': 'form-delete-{{ $connectedUser->id }}' } }))"
+                                    onclick="document.dispatchEvent(new CustomEvent('delete-button-pressed', { detail: { 'formId': 'form-delete-{{ $connectedUser->user->id }}' } }))"
                             >
                                 Verwijder
                             </button>

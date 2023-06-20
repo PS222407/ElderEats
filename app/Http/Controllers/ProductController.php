@@ -24,7 +24,7 @@ class ProductController extends Controller
             'name' => $request->validated('name'),
         ]);
 
-        Account::$accountModel->products()->attach(array_fill(0, $request->validated('amount'), $product->id));
+        \App\Models\Account::find(Account::$accountEntity->id)->products()->attach(array_fill(0, $request->validated('amount'), $product->id));
 
         Session::flash('type', 'success');
 
@@ -41,14 +41,14 @@ class ProductController extends Controller
             return response()->json(['status' => 'failed', 'message' => 'product not found'], 404);
         }
 
-        Account::$accountModel->shoppingList()->attach($product, ['is_active' => true]);
+        Account::$accountEntity->shoppingList()->attach($product, ['is_active' => true]);
 
         return response()->json(['status' => 'success', 'message' => 'success']);
     }
 
     public function detach(int $pivotId)
     {
-        $accountPivotIds = Account::$accountModel->activeProducts->pluck('pivot.id')->toArray();
+        $accountPivotIds = Account::$accountEntity->activeProducts->pluck('pivot.id')->toArray();
         $authorized = in_array($pivotId, $accountPivotIds, true);
 
         $row = DB::table('account_products')->where('id', $pivotId)?->first();
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
     public function addManualProduct(StoreProductManualRequest $request)
     {
-        Account::$accountModel->products()->create($request->validated());
+        \App\Models\Account::find(Account::$accountEntity->id)->products()->create($request->validated());
 
         Session::flash('type', 'success');
 
@@ -84,10 +84,10 @@ class ProductController extends Controller
             return redirect('/');
         }
 
-        Account::$accountModel->products()->attach($id);
+        \App\Models\Account::find(Account::$accountEntity->id)->products()->attach($id);
 
         try {
-            foreach (Account::$accountModel->usersConnected as $recipient) {
+            foreach (Account::$accountEntity->usersConnected as $recipient) {
                 Mail::to($recipient)->send(new NewProductAdded());
             }
         } catch (Exception $e) {
