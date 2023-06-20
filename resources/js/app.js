@@ -300,10 +300,12 @@ document.addEventListener('add-non-existing-product-button-pressed', function (e
         allowOutsideClick: false,
         title: 'Voeg product toe',
         html:
+            //Add product by name.
             "<form action='/add-manually-product' method='post'>" +
             "   <input type='hidden' name='_token' value='" + csrf + "' />" +
-            "   <input type='text' name='name' />" +
-            "   <button type='submit' class='btn-primary'>Opslaan</button>" +
+            "   <p class='mt-2'>Voer de naam in</p>" +
+            "   <input placeholder='Product naam' type='text' name='name' />" +
+            "   <button type='submit' class='btn-primary mt-4'>Opslaan</button>" +
             "</form>",
         showConfirmButton: false,
         showCancelButton: true,

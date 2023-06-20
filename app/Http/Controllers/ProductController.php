@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Rules\Barcode;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -19,13 +20,23 @@ class ProductController extends Controller
 {
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create([
+        $response = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->post(config('app.api_base_url') . '/Products', [
             'barcode' => $request->validated('ean'),
             'name' => $request->validated('name'),
+            'amount' => $request->validated('amount'),
         ]);
 
-        \App\Models\Account::find(Account::$accountEntity->id)->products()->attach(array_fill(0, $request->validated('amount'), $product->id));
+        $response = $response->json();
+        $accountId = Account::$accountModel->id;
+        $productId = $response['id'];
+        $quantity = $request['amount'];
 
+        for ($i = 0; $i < $quantity; $i++) {
+            Http::withHeaders(['x-api-key' => Account::$accountModel->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
+                'accountId' => $accountId,
+                'productId' => $productId,
+            ]);
+        }
         Session::flash('type', 'success');
 
         return redirect()->route('welcome');
@@ -34,53 +45,57 @@ class ProductController extends Controller
     public function addToShoppingList(int $ean)
     {
         Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
-
-        $product = Product::firstWhere('barcode', $ean);
+        $product = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->get(config('app.api_base_url') . '/Products/Product/Barcode/' . $ean);
+        $product = $product->json();
 
         if (!$product) {
             return response()->json(['status' => 'failed', 'message' => 'product not found'], 404);
         }
 
-        Account::$accountEntity->shoppingList()->attach($product, ['is_active' => true]);
+        $accountId = Account::$accountModel->id;
+        $productId = $product['id'];
+
+        $response = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
+        if ($response->notFound()) {
+
+            return response()->json(['status' => 'failed', 'message' => 'product not added to the shoppinglist', 404]);
+        }
 
         return response()->json(['status' => 'success', 'message' => 'success']);
     }
 
     public function detach(int $pivotId)
     {
-        $accountPivotIds = Account::$accountEntity->activeProducts->pluck('pivot.id')->toArray();
-        $authorized = in_array($pivotId, $accountPivotIds, true);
+        $response = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->put(config('app.api_base_url') . "/Accounts/Products/{$pivotId}/RanOut");
 
-        $row = DB::table('account_products')->where('id', $pivotId)?->first();
-        if (!$row) {
+        $product = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->get(config('app.api_base_url') . "/Products/Product/Connection/{$pivotId}");
+        try {
+            $ean = $product['barcode'];
+        } catch (Exception $e) {
             return redirect()->route('welcome')->with('error-popup', 'Geen gekoppeld product gevonden');
         }
 
-        $ean = Product::find($row->product_id)->barcode;
-        if ($authorized) {
-            DB::table('account_products')->where('id', $pivotId)->update([
-                'ran_out_at' => now(),
-            ]);
+        if ($response->getStatusCode() == 500) {
+            return redirect()->route('welcome')->with('error-popup', 'Geen gekoppeld product gevonden');
         }
-
         Session::flash('ean', $ean);
-
         return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
     }
 
     public function addManualProduct(StoreProductManualRequest $request)
     {
-        \App\Models\Account::find(Account::$accountEntity->id)->products()->create($request->validated());
+        $product = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->post(config('app.api_base_url') . '/Products', [
+            'name' => $request->validated('name'),
+        ]);
 
-        Session::flash('type', 'success');
+        $product = $product->json();
+        $productId = $product['id'];
+        $accountId = Account::$accountModel->id;
 
-        return redirect('/');
-    }
-
-    public function addManualProductShoppingList(StoreProductManualRequest $request)
-    {
-        $product = Product::create($request->validated());
-        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($product->id, ['is_active' => 1]);
+        Http::withHeaders(['x-api-key' => Account::$accountModel->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
+            'accountId' => $accountId,
+            'productId' => $productId,
+        ]);
 
         Session::flash('type', 'success');
 
@@ -89,12 +104,19 @@ class ProductController extends Controller
 
     public function addManualExistingProduct(int $id)
     {
-        $product = Product::find($id);
+        $product = Http::withHeaders(['x-api-key' => Account::$accountModel->token])->get(config('app.api_base_url') . '/Products/' . $id);
+        $product = $product->json();
         if (!$product) {
             return redirect('/');
         }
 
-        \App\Models\Account::find(Account::$accountEntity->id)->products()->attach($id);
+        $productId = $product['id'];
+        $accountId = Account::$accountModel->id;
+
+        Http::withHeaders(['x-api-key' => Account::$accountModel->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
+            'accountId' => $accountId,
+            'productId' => $productId,
+        ]);
 
         try {
             foreach (Account::$accountEntity->usersConnected as $recipient) {
