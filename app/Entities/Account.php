@@ -5,15 +5,14 @@ namespace App\Entities;
 use App\Classes\ApiEndpoint;
 use App\Enums\ConnectionStatus;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Support\Facades\Http;
 
 class Account
 {
     private string $baseUrl;
 
-    public DateTime $temporaryTokenExpiresAt;
-    public DateTime $notificationLastSentAt;
+    public ?Carbon $temporaryTokenExpiresAt;
+    public ?Carbon $notificationLastSentAt;
     public array $accountUsers = [];
 
     public function __construct(
@@ -26,8 +25,8 @@ class Account
     ) {
         $this->baseUrl = config('app.api_base_url');
 
-        $this->temporaryTokenExpiresAt = new Carbon($temporaryTokenExpiresAt);
-        $this->notificationLastSentAt = new Carbon($notificationLastSentAt);
+        $this->temporaryTokenExpiresAt = $temporaryTokenExpiresAt ? Carbon::create($temporaryTokenExpiresAt) : null;
+        $this->notificationLastSentAt = $notificationLastSentAt ? Carbon::create($notificationLastSentAt) : null;
     }
 
     public function loadConnectedUsers()

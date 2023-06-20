@@ -7,8 +7,8 @@ use Carbon\Carbon;
 
 class AccountUser
 {
-    public Carbon $createdAt;
-    public Carbon $updatedAt;
+    public ?Carbon $createdAt;
+    public ?Carbon $updatedAt;
 
     public function __construct(
         public ConnectionStatus $status,
@@ -16,7 +16,7 @@ class AccountUser
         ?string $createdAt,
         ?string $updatedAt,
     ) {
-        $this->createdAt = new Carbon($createdAt);
-        $this->updatedAt = new Carbon($updatedAt);
+        $this->createdAt = $createdAt ? Carbon::create($createdAt) : null;
+        $this->updatedAt = $updatedAt ? Carbon::create($updatedAt) : null;
     }
 }

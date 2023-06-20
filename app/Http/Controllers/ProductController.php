@@ -24,7 +24,7 @@ class ProductController extends Controller
             'name' => $request->validated('name'),
         ]);
 
-        Account::$accountEntity->products()->attach(array_fill(0, $request->validated('amount'), $product->id));
+        \App\Models\Account::find(Account::$accountEntity->id)->products()->attach(array_fill(0, $request->validated('amount'), $product->id));
 
         Session::flash('type', 'success');
 
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
     public function addManualProduct(StoreProductManualRequest $request)
     {
-        Account::$accountEntity->products()->create($request->validated());
+        \App\Models\Account::find(Account::$accountEntity->id)->products()->create($request->validated());
 
         Session::flash('type', 'success');
 
@@ -84,7 +84,7 @@ class ProductController extends Controller
             return redirect('/');
         }
 
-        Account::$accountEntity->products()->attach($id);
+        \App\Models\Account::find(Account::$accountEntity->id)->products()->attach($id);
 
         try {
             foreach (Account::$accountEntity->usersConnected as $recipient) {

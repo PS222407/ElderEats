@@ -6,9 +6,9 @@ use Carbon\Carbon;
 
 class User
 {
-    public Carbon $createdAt;
-    public Carbon $updatedAt;
-    public Carbon $emailVerifiedAt;
+    public ?Carbon $createdAt;
+    public ?Carbon $updatedAt;
+    public ?Carbon $emailVerifiedAt;
 
     public function __construct(
         public int $id,
@@ -20,8 +20,8 @@ class User
         ?string $createdAt,
         ?string $updatedAt,
     ) {
-        $this->createdAt = new Carbon($createdAt);
-        $this->updatedAt = new Carbon($updatedAt);
-        $this->emailVerifiedAt = new Carbon($emailVerifiedAt);
+        $this->createdAt = $createdAt ? Carbon::create($createdAt) : null;
+        $this->updatedAt = $updatedAt ? Carbon::create($updatedAt) : null;
+        $this->emailVerifiedAt = $emailVerifiedAt ? Carbon::create($emailVerifiedAt) : null;
     }
 }

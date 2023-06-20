@@ -32,12 +32,12 @@ class ProductListHomepage extends Component
 
     public function nextPage()
     {
-        $this->loadProducts();
+        $this->productsData = $this->loadProducts($this->paginateData['nextPage']);
     }
 
     public function previousPage()
     {
-        $this->loadProducts();
+        $this->productsData = $this->loadProducts($this->paginateData['previousPage']);
     }
 
     private function loadProducts(int $page = null)
@@ -51,28 +51,28 @@ class ProductListHomepage extends Component
             'page' => $page ?? 1,
         ]);
 
-        $this->paginateData = $response?->json()['paginate'];
+        $this->paginateData = $response?->json()['paginate'] ?? null;
 
         $productsData = [];
-        foreach ($response->json()['data'] as $data) {
-//            $product = new Product(
-//                $data['product']['id'],
-//                $data['product']['name'],
-//                $data['product']['brand'] ?? null,
-//                $data['product']['quantityInPackage'] ?? null,
-//                $data['product']['barcode'],
-//                $data['product']['image'] ?? null,
-//            );
-//            $accountProduct = new AccountProduct(
-//                $data['accountProduct']['id'],
-//                $data['accountProduct']['expirationDate'],
-//                $data['accountProduct']['ranOutAt'],
-//                $data['accountProduct']['createdAt'],
-//                $data['accountProduct']['updatedAt'],
-//            );
+        foreach ($response->json()['data'] ?? [] as $data) {
+            $product = new Product(
+                id: $data['product']['id'],
+                name: $data['product']['name'],
+                brand: $data['product']['brand'] ?? null,
+                quantityInPackage: $data['product']['quantityInPackage'] ?? null,
+                barcode: $data['product']['barcode'] ?? null,
+                image: $data['product']['image'] ?? null,
+            );
+            $accountProduct = new AccountProduct(
+                id: $data['accountProduct']['id'],
+                expirationDate:  $data['accountProduct']['expirationDate'],
+                ranOutAt: $data['accountProduct']['ranOutAt'],
+                createdAt: $data['accountProduct']['createdAt'],
+                updatedAt: $data['accountProduct']['updatedAt'],
+            );
             $productsData[] = [
-                'accountProduct' => $accountProduct,
-                'product' => $product,
+                'accountProduct' => (array)$accountProduct,
+                'product' => (array)$product,
                 'count' => $data['count']
             ];
         }
@@ -82,15 +82,15 @@ class ProductListHomepage extends Component
 
     public function render()
     {
-        //        DB::statement('SET SESSION sql_mode = ""');
-        //        $products = Account::$accountEntity
-        //            ->activeProducts()
-        //            ->selectRaw('COUNT(*) AS account_products_count')
-        //            ->where('name', 'like', '%' . $this->search . '%')
-        //            ->groupBy('id', 'expiration_date')
-        //            ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
-        //            ->paginate(4);
-        //        DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
+        // DB::statement('SET SESSION sql_mode = ""');
+        // $products = Account::$accountEntity
+        //     ->activeProducts()
+        //     ->selectRaw('COUNT(*) AS account_products_count')
+        //     ->where('name', 'like', '%' . $this->search . '%')
+        //     ->groupBy('id', 'expiration_date')
+        //     ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
+        //     ->paginate(4);
+        // DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
 
         return view('livewire.product-list-homepage');
     }

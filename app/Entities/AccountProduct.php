@@ -6,10 +6,10 @@ use Carbon\Carbon;
 
 class AccountProduct
 {
-    public Carbon $expirationDate;
-    public Carbon $ranOutAt;
-    public Carbon $createdAt;
-    public Carbon $updatedAt;
+    public ?Carbon $expirationDate;
+    public ?Carbon $ranOutAt;
+    public ?Carbon $createdAt;
+    public ?Carbon $updatedAt;
 
     public function __construct(
         public int $id,
@@ -18,9 +18,9 @@ class AccountProduct
         string $createdAt,
         string $updatedAt,
     ) {
-        $this->expirationDate = Carbon::create($expirationDate);
-        $this->ranOutAt = Carbon::create($ranOutAt);
-        $this->createdAt = Carbon::create($createdAt);
-        $this->updatedAt = Carbon::create($updatedAt);
+        $this->expirationDate = $expirationDate ? Carbon::create($expirationDate) : null;
+        $this->ranOutAt = $ranOutAt ? Carbon::create($ranOutAt) : null;
+        $this->createdAt = $createdAt ? Carbon::create($createdAt) : null;
+        $this->updatedAt = $updatedAt ? Carbon::create($updatedAt) : null;
     }
 }

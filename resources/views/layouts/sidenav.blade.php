@@ -97,7 +97,7 @@
             </form>
             <h1 class="mt-4">Beheer gekoppelde gebruikers</h1>
             <table>
-            @foreach($connectedUsers as $connectedUser)
+            @foreach($connectedUsers ?? [] as $connectedUser)
                 <tr class="border border-black border-l-0 border-r-0">
                     <td class="py-3 pl-2">{{ $connectedUser->user->name }}</td>
                     <td class="py-3">
