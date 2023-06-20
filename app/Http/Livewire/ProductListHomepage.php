@@ -27,18 +27,18 @@ class ProductListHomepage extends Component
 
     public function mount()
     {
-        $this->productsData = $this->loadProducts();
+//        $this->productsData = $this->loadProducts();
     }
 
-    public function nextPage()
-    {
-        $this->productsData = $this->loadProducts($this->paginateData['nextPage']);
-    }
-
-    public function previousPage()
-    {
-        $this->productsData = $this->loadProducts($this->paginateData['previousPage']);
-    }
+//    public function nextPage()
+//    {
+//        $this->productsData = $this->loadProducts($this->paginateData['nextPage']);
+//    }
+//
+//    public function previousPage()
+//    {
+//        $this->productsData = $this->loadProducts($this->paginateData['previousPage']);
+//    }
 
     private function loadProducts(int $page = null)
     {
@@ -80,18 +80,35 @@ class ProductListHomepage extends Component
         return $productsData;
     }
 
+//    public function render()
+//    {
+////         DB::statement('SET SESSION sql_mode = ""');
+////         $products = \App\Models\Account::find(Account::$accountEntity->id)
+////             ->activeProducts()
+////             ->selectRaw('COUNT(*) AS account_products_count')
+////             ->where('name', 'like', '%' . $this->search . '%')
+////             ->groupBy('id', 'expiration_date')
+////             ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
+////             ->paginate(4);
+////         DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
+//
+//        return view('livewire.product-list-homepage');
+//    }
+
     public function render()
     {
-        // DB::statement('SET SESSION sql_mode = ""');
-        // $products = Account::$accountEntity
-        //     ->activeProducts()
-        //     ->selectRaw('COUNT(*) AS account_products_count')
-        //     ->where('name', 'like', '%' . $this->search . '%')
-        //     ->groupBy('id', 'expiration_date')
-        //     ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
-        //     ->paginate(4);
-        // DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
+        DB::statement('SET SESSION sql_mode = ""');
+        $products = \App\Models\Account::find(Account::$accountEntity->id)
+            ->activeProducts()
+            ->selectRaw('COUNT(*) AS account_products_count')
+            ->where('name', 'like', '%' . $this->search . '%')
+            ->groupBy('id', 'expiration_date')
+            ->orderByRaw('expiration_date IS NULL ASC, expiration_date ASC')
+            ->paginate(4);
+        DB::statement('SET SESSION sql_mode = "STRICT_ALL_TABLES"');
 
-        return view('livewire.product-list-homepage');
+        return view('livewire.product-list-homepage', [
+            'products' => $products,
+        ]);
     }
 }
