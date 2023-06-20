@@ -116,7 +116,6 @@ class ProductController extends Controller
             return redirect('/');
         }
 
-        //dd( Account::$accountModel->shoppingList());
         \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($id, ['is_active' => 1]);
 
         Session::flash('type', 'success');

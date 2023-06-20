@@ -11,8 +11,6 @@ class ShowShoppingList extends Component
     {
         $products =  \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->get();
 
-        //dd($products);
-
         return view('livewire.show-shopping-list', [
             'products' => $products,
             'index' => 0,
