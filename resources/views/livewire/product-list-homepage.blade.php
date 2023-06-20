@@ -104,9 +104,14 @@
     <div class="flex justify-center">
         <button onclick="document.dispatchEvent(new CustomEvent('add-product-button-pressed'))"
                 class="text-icon text-4xl px-5 py-4 mt-2 shadow border rounded-lg">
-            +
+               +
         </button>
+        <button onclick="document.dispatchEvent(new CustomEvent('add-product-shoppinglist-button-pressed'))"
+        class="absolute right-5 text-icon text-4xl px-4 py-3 mt-2 shadow border rounded-lg">
+        <img class="w-9 h-12" src="{{ asset('images/shopping-cart-outline-svgrepo-com.svg') }}" alt="boodschappen lijst" />
+</button>
     </div>
+
 
     <table class="mt-5 w-full text-xl">
         <tr class="text-center text-label">

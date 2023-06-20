@@ -29,7 +29,9 @@ Route::post('/products/{ean}/add-to-shopping-list', [ProductController::class, '
 Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach'])->name('products.pivotId.detach');
 
 Route::post('/add-manually-product', [ProductController::class, 'addManualProduct']);
+Route::post('/add-manually-product-shoppinglist', [ProductController::class, 'addManualProductShoppingList']);
 Route::post('/add-manually-existing-product/{id}', [ProductController::class, 'addManualExistingProduct'])->name('product.add-manual-existing-product');
+Route::post('/add-manually-existing-product-shoppinglist/{id}', [ProductController::class, 'addManualExistingProductShoppingList'])->name('product.add-manual-existing-product-shoppinglist');
 
 Route::get('/test', function (\Illuminate\Http\Request $request) {
     Log::channel('api')->info($request->all());

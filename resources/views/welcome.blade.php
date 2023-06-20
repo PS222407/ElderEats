@@ -62,4 +62,5 @@
 
     <div class="btn hidden"></div>
     @include('modals.product-added-modal')
+    @include('modals.product-added-modal-shopping-list')
 @endsection

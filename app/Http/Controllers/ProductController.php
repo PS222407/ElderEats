@@ -77,6 +77,16 @@ class ProductController extends Controller
         return redirect('/');
     }
 
+    public function addManualProductShoppingList(StoreProductManualRequest $request)
+    {
+        $product = Product::create($request->validated());
+        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($product->id, ['is_active' => 1]);
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
     public function addManualExistingProduct(int $id)
     {
         $product = Product::find($id);
@@ -93,6 +103,20 @@ class ProductController extends Controller
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
+    public function addManualExistingProductShoppingList(int $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return redirect('/');
+        }
+
+        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($id, ['is_active' => 1]);
 
         Session::flash('type', 'success');
 

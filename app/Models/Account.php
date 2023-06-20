@@ -59,4 +59,9 @@ class Account extends Model
     {
         return $this->belongsToMany(Product::class, 'fixed_products')->withTimestamps();
     }
+
+    public function shoppingListWithoutTimestamps(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'fixed_products')->withPivot(['is_active'])->where([['is_active', 1]]);
+    }
 }
