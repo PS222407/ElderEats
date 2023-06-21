@@ -11,7 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('token')->after('remember_token');
+            $table->string('token')->default(null)->nullable()->after('remember_token');
         });
     }
 
