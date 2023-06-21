@@ -15,7 +15,7 @@ class User
         public string $name,
         public string $email,
         ?string $emailVerifiedAt,
-        public string $token,
+        public ?string $token,
         public ?string $rememberToken,
         ?string $createdAt,
         ?string $updatedAt,

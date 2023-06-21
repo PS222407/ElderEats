@@ -22,7 +22,7 @@ class ProductController extends Controller
         $amount = $request->has('amount') ? (int)$request->amount : 1;
 
         if (!$product) {
-            $response = Http::get(sprintf('https://world.openfoodfacts.org/api/v3/product/%s.json', $request->barcode), [
+            $response = Http::withoutVerifying()->get(sprintf('https://world.openfoodfacts.org/api/v3/product/%s.json', $request->barcode), [
                 'fields' => 'product_name,image_url,brands,quantity',
             ]);
             $json = $response->json();

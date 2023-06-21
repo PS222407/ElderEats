@@ -48,12 +48,20 @@ class Account
         } elseif (((isset($_COOKIE['account_token']) && !$accountEntity) || !isset($_COOKIE['account_token']))) {
             $token = Str::uuid();
             setcookie('account_token', $token, time() + (86400 * 400), '/');
-            Http::withoutVerifying()->post(config('app.api_base_url') . ApiEndpoint::STORE_ACCOUNT, [
+            $response2 = Http::withoutVerifying()->post(config('app.api_base_url') . ApiEndpoint::STORE_ACCOUNT, [
                 'token' => $token,
             ]);
-            // $accountModel = AccountModel::create([
-            //   'token' => $token,
-            // ]);
+
+            $accArr = $response2->json();
+
+            $accountEntity = new AccountEntity(
+                id: $accArr['id'],
+                name: $accArr['name'],
+                token: $accArr['token'],
+                temporaryToken: $accArr['temporaryToken'],
+                temporaryTokenExpiresAt: $accArr['temporaryTokenExpiresAt'],
+                notificationLastSentAt: $accArr['notificationLastSentAt'],
+            );
         }
 
         self::$accountEntity = $accountEntity;

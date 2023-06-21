@@ -19,7 +19,7 @@ class ProductController extends Controller
 {
     public function store(StoreProductRequest $request)
     {
-        $response = Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->post(config('app.api_base_url') . '/Products', [
+        $response = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->post(config('app.api_base_url') . '/Products', [
             'barcode' => $request->validated('ean'),
             'name' => $request->validated('name'),
             'amount' => $request->validated('amount'),
@@ -31,7 +31,7 @@ class ProductController extends Controller
         $quantity = $request['amount'];
 
         for ($i = 0; $i < $quantity; $i++) {
-            Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
+            Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
                 'accountId' => $accountId,
                 'productId' => $productId,
             ]);
@@ -44,7 +44,7 @@ class ProductController extends Controller
     public function addToShoppingList(int $ean)
     {
         Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
-        $product = Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/Product/Barcode/' . $ean);
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/Product/Barcode/' . $ean);
         $product = $product->json();
 
         if (!$product) {
@@ -54,7 +54,7 @@ class ProductController extends Controller
         $accountId = Account::$accountEntity->id;
         $productId = $product['id'];
 
-        $response = Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
+        $response = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
         if ($response->notFound()) {
 
             return response()->json(['status' => 'failed', 'message' => 'product not added to the shoppinglist', 404]);
@@ -65,9 +65,9 @@ class ProductController extends Controller
 
     public function detach(int $pivotId)
     {
-        $response = Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/Products/{$pivotId}/RanOut");
+        $response = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/Products/{$pivotId}/RanOut");
 
-        $product = Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . "/Products/Product/Connection/{$pivotId}");
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . "/Products/Product/Connection/{$pivotId}");
         try {
             $ean = $product['barcode'];
         } catch (Exception $e) {
@@ -83,7 +83,7 @@ class ProductController extends Controller
 
     public function addManualProduct(StoreProductManualRequest $request)
     {
-        $product = Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->post(config('app.api_base_url') . '/Products', [
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->post(config('app.api_base_url') . '/Products', [
             'name' => $request->validated('name'),
         ]);
 
@@ -91,7 +91,7 @@ class ProductController extends Controller
         $productId = $product['id'];
         $accountId = Account::$accountEntity->id;
 
-        Http::withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
+        Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/Products/{$productId}/Create", [
             'accountId' => $accountId,
             'productId' => $productId,
         ]);

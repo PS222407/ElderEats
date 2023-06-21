@@ -37,6 +37,10 @@ Route::get('/test', function (\Illuminate\Http\Request $request) {
     Log::channel('api')->info($request->all());
 });
 
+Route::get('/testweb', function () {
+    dump(config('app.api_base_url'), \App\Classes\ApiEndpoint::GET_ACCOUNT_BY_TOKEN);
+});
+
 //Route::post('/broadcasting/auth', function () {
 //    return \App\Classes\Account::$accountModel;
 //});

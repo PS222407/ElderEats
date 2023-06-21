@@ -26,8 +26,8 @@
         <div class="flex flex-col mx-auto text-2xl mt-10">
             <div id="display-code" class="text-center text-4xl text-white"></div>
             <div id="display-qrcode" class="my-5 text-center w-min mx-auto rounded p-3 border bg-white"></div>
-            <p class="capitalize w-64 text-white italic mx-auto">
-                Scan deze qr code via je telefoon vanaf onze website.
+            <p class="w-64 text-white italic mx-auto">
+                Scan deze QR-code via de mobiele-app.
             </p>
         </div>
     </div>
@@ -59,6 +59,31 @@
         </div>
 
         <div class="flex flex-col mx-auto px-5 mt-10">
+            <h1 class="mb-4 font-extrabold text-center text-2xl">Instellingen</h1>
+            <hr class="mb-4">
+
+            <h1 class="mt-4 mb-2 font-bold">Verander naam</h1>
+            <hr class="mb-4">
+            <form action="{{ route('account.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <label class="mb-4" for="name">Naam</label>
+                <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountEntity?->name }}">
+                <button type="submit" class="button-name bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">Opslaan</button>
+                @error('name')
+                    <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
+                    <script>
+                        console.log(document.getElementById('open-settings-sidebar'));
+                        document.getElementById('open-settings-sidebar').click();
+                    </script>
+                @enderror
+            </form>
+            <div class="mb-4">
+                (Let op: dit is zichtbaar voor de familie/verzorgers)
+            </div>
+
+            <h1 class="mt-4 mb-2 font-bold">Geluid</h1>
+            <hr class="mb-4">
             <div class="mb-4">
                 <button onclick="toggleSound()" id="sound-on" @if((isset($_COOKIE['sound']) && $_COOKIE['sound'] === "false")) style="display: none" @endif>
                     <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 640 512">
@@ -78,24 +103,8 @@
                 </button>
             </div>
 
-            <h1 class="mb-4 font-extrabold">Instellingen</h1>
+            <h1 class="mt-4 mb-2 font-bold">Beheer gekoppelde gebruikers</h1>
             <hr class="mb-4">
-            <h1 class="mb-4">Voer hier uw naam in (zichtbaar voor de familie/verzorgers)</h1>
-            <form action="{{ route('account.update') }}" method="POST">
-                @csrf
-                @method('PUT')
-                <label class="mb-4" for="name">Naam</label>
-                <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountEntity?->name }}">
-                <button type="submit" class="button-name bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">Opslaan</button>
-                @error('name')
-                    <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>
-                    <script>
-                        console.log(document.getElementById('open-settings-sidebar'));
-                        document.getElementById('open-settings-sidebar').click();
-                    </script>
-                @enderror
-            </form>
-            <h1 class="mt-4">Beheer gekoppelde gebruikers</h1>
             <table>
             @foreach($connectedUsers ?? [] as $connectedUser)
                 <tr class="border border-black border-l-0 border-r-0">
