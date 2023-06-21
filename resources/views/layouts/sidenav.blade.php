@@ -85,7 +85,7 @@
                 @csrf
                 @method('PUT')
                 <label class="mb-4" for="name">Naam</label>
-                <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountEntity->name }}">
+                <input class="mb-4" type="text" name="name" id="name" value="{{ \App\Classes\Account::$accountEntity?->name }}">
                 <button type="submit" class="button-name bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">Opslaan</button>
                 @error('name')
                     <p class="text-red-400">Vul een naam in die maximaal 255 tekens bevat.</p>

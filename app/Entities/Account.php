@@ -29,7 +29,7 @@ class Account
         $this->notificationLastSentAt = $notificationLastSentAt ? Carbon::create($notificationLastSentAt) : null;
     }
 
-    public function loadConnectedUsers()
+    public function loadConnectedUsers(): ?array
     {
         $response = Http::withoutVerifying()->withHeaders([
             'x-api-key' => $this->token,
@@ -43,6 +43,7 @@ class Account
 
         foreach ($response->json(['accountUsers']) as $accountUserArray) {
             $user = new User(
+                id: $accountUserArray['user']['id'],
                 name: $accountUserArray['user']['name'],
                 email: $accountUserArray['user']['email'],
                 emailVerifiedAt: $accountUserArray['user']['emailVerifiedAt'],
