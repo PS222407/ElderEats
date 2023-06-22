@@ -55,7 +55,7 @@ class Account
             $accArr = $response2->json();
 
             $accountEntity = new AccountEntity(
-                id: $accArr['id'],
+                id: $accArr['id'] ?? null,
                 name: $accArr['name'],
                 token: $accArr['token'],
                 temporaryToken: $accArr['temporaryToken'],
