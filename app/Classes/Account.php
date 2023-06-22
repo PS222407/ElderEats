@@ -13,10 +13,13 @@ class Account
     public static function generateTempToken(): string
     {
         if (self::$accountEntity->temporaryTokenExpiresAt <= now()) {
+            $tempToken = random_int(100_000, 999_999);
             \App\Models\Account::find(self::$accountEntity->id)->update([
-                'temporary_token' => random_int(100_000, 999_999),
+                'temporary_token' => $tempToken,
                 'temporary_token_expires_at' => now()->addMinutes(10),
             ]);
+
+            self::$accountEntity->temporaryToken = $tempToken;
         }
 
         return self::$accountEntity->temporaryToken;
