@@ -16,6 +16,9 @@
     @if(session('type'))
         <div id="show-success-alert"></div>
     @endif
+    @if(session('success-no-ean'))
+        <div id="show-success-no-ean-alert"></div>
+    @endif
 
     <script>
         let timeoutArray = [];

@@ -239,12 +239,27 @@ if (showErrorAlert) {
     errorAlert();
 }
 
+const showSuccessNoEanAlert = document.getElementById('show-success-no-ean-alert');
+if (showSuccessNoEanAlert) {
+    successNoEanAlert();
+}
+
 function successAlert() {
     Swal.fire({
         icon: "success",
         title: 'Succes',
         showConfirmButton: false,
         timer: 1500,
+    });
+}
+
+function successNoEanAlert() {
+    Swal.fire({
+        icon: "success",
+        title: 'Succes',
+        text: 'Opmerking: Het artikel heeft geen barcode en kan daarom niet toegevoegd worden aan de boodschappenlijst.',
+        showConfirmButton: false,
+        timer: 6000,
     });
 }
 
