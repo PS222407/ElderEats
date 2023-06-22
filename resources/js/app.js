@@ -207,7 +207,8 @@ if (showAddToShoppingList) {
     }).then((result) => {
         if (result.isConfirmed) {
             const ean = showAddToShoppingList.getAttribute('ean');
-            axios.post('/products/' + ean + '/add-to-shopping-list')
+            const productid = showAddToShoppingList.getAttribute('productid');
+            axios.post('/products/' + productid + '/add-to-shopping-list')
             .then(function (response) {
                 if (response.status === 200) {
                     successAlert();
@@ -259,7 +260,8 @@ function successNoEanAlert() {
         title: 'Succes',
         text: 'Opmerking: Het artikel heeft geen barcode en kan daarom niet toegevoegd worden aan de boodschappenlijst.',
         showConfirmButton: false,
-        timer: 6000,
+        timer: 10000,
+        timerProgressBar: true,
     });
 }
 

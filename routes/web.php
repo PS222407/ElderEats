@@ -25,7 +25,7 @@ Route::post('/account/attach-user', [AccountController::class, 'attachUser']);
 Route::put('/account', [AccountController::class, 'update'])->name('account.update');
 
 Route::post('/products', [ProductController::class, 'store']);
-Route::post('/products/{ean}/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
+Route::post('/products/{id}/add-to-shopping-list', [ProductController::class, 'addToShoppingList']);
 Route::delete('/products/{pivotId}/detach', [ProductController::class, 'detach'])->name('products.pivotId.detach');
 
 Route::post('/add-manually-product', [ProductController::class, 'addManualProduct']);

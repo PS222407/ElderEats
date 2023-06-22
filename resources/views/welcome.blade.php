@@ -8,7 +8,7 @@
     @livewire('product-list-homepage')
 
     @if (session('popup'))
-        <div id="show-add-to-shopping-list" ean="{{ session('ean') }}"></div>
+        <div id="show-add-to-shopping-list" ean="{{ session('ean') }}" productid="{{ session('productid') }}"></div>
     @endif
     @if (session('error-popup'))
         <div id="show-error-alert"></div>

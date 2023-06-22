@@ -7,13 +7,11 @@ use App\Http\Requests\StoreProductManualRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Mail\NewProductAdded;
 use App\Models\Product;
-use App\Rules\Barcode;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Validator;
 
 class ProductController extends Controller
 {
@@ -41,10 +39,10 @@ class ProductController extends Controller
         return redirect()->route('welcome');
     }
 
-    public function addToShoppingList(int $ean)
+    public function addToShoppingList(int $id)
     {
-        Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
-        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/Product/Barcode/' . $ean);
+//        Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/' . $id);
         $product = $product->json();
 
         if (!$product) {
@@ -56,7 +54,6 @@ class ProductController extends Controller
 
         $response = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
         if ($response->notFound()) {
-
             return response()->json(['status' => 'failed', 'message' => 'product not added to the shoppinglist', 404]);
         }
 
@@ -70,14 +67,15 @@ class ProductController extends Controller
         $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . "/Products/Product/Connection/{$pivotId}");
         try {
             $ean = $product['barcode'];
+            Session::flash('ean', $ean);
         } catch (Exception $e) {
-            return redirect()->route('welcome')->with('success-no-ean', 'Succesvol verwijderd, maar kan niet aan de boodschappenlijst worden toegevoegd.');
+            // return redirect()->route('welcome')->with('success-no-ean', 'Succesvol verwijderd, maar kan niet aan de boodschappenlijst worden toegevoegd.');
         }
 
-        if ($response->getStatusCode() == 500) {
+        if ($response->status() == 500) {
             return redirect()->route('welcome')->with('error-popup', 'Geen gekoppeld product gevonden');
         }
-        Session::flash('ean', $ean);
+        Session::flash('productid', $product['id']);
         return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
     }
 
