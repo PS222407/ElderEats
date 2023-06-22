@@ -54,6 +54,8 @@ class Account
 
             $accArr = $response2->json();
 
+            dd($accArr, $response2->status());
+
             $accountEntity = new AccountEntity(
                 id: $accArr['id'] ?? null,
                 name: $accArr['name'],
