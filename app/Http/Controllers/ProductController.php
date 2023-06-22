@@ -71,7 +71,7 @@ class ProductController extends Controller
         try {
             $ean = $product['barcode'];
         } catch (Exception $e) {
-            return redirect()->route('welcome')->with('error-popup', 'Geen gekoppeld product gevonden');
+            return redirect()->route('welcome')->with('success-no-ean', 'Succesvol verwijderd, maar kan niet aan de boodschappenlijst worden toegevoegd.');
         }
 
         if ($response->getStatusCode() == 500) {
