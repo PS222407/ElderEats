@@ -132,12 +132,33 @@ class ProductController extends Controller
 
     public function addManualExistingProductShoppingList(int $id)
     {
-        $product = Product::find($id);
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/' . $id);
+
         if (!$product) {
             return redirect('/');
         }
 
-        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($id, ['is_active' => 1]);
+        $accountId = Account::$accountEntity->id;
+        $productId = $product['id'];
+
+        Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
+    public function addManualProductShoppingList(StoreProductManualRequest $request)
+    {
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->post(config('app.api_base_url') . '/Products', [
+            'name' => $request->validated('name'),
+        ]);
+
+        $product = $product->json();
+        $accountId = Account::$accountEntity->id;
+        $productId = $product['id'];
+
+        Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
 
         Session::flash('type', 'success');
 
