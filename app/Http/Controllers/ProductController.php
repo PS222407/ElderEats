@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProductManualRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Mail\NewProductAdded;
 use App\Models\Product;
+use App\Rules\Barcode;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -39,10 +40,10 @@ class ProductController extends Controller
         return redirect()->route('welcome');
     }
 
-    public function addToShoppingList(int $id)
+    public function addToShoppingList(int $ean)
     {
-//        Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
-        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/' . $id);
+        Validator::validate(['ean' => $ean], ['ean' => ['required', new Barcode()]]);
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/Product/Barcode/' . $ean);
         $product = $product->json();
 
         if (!$product) {
@@ -54,6 +55,7 @@ class ProductController extends Controller
 
         $response = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
         if ($response->notFound()) {
+
             return response()->json(['status' => 'failed', 'message' => 'product not added to the shoppinglist', 404]);
         }
 
@@ -67,15 +69,14 @@ class ProductController extends Controller
         $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . "/Products/Product/Connection/{$pivotId}");
         try {
             $ean = $product['barcode'];
-            Session::flash('ean', $ean);
         } catch (Exception $e) {
-            // return redirect()->route('welcome')->with('success-no-ean', 'Succesvol verwijderd, maar kan niet aan de boodschappenlijst worden toegevoegd.');
+            return redirect()->route('welcome')->with('success-no-ean', 'Succesvol verwijderd, maar kan niet aan de boodschappenlijst worden toegevoegd.');
         }
 
-        if ($response->status() == 500) {
+        if ($response->getStatusCode() == 500) {
             return redirect()->route('welcome')->with('error-popup', 'Geen gekoppeld product gevonden');
         }
-        Session::flash('productid', $product['id']);
+        Session::flash('ean', $ean);
         return redirect()->route('welcome')->with('popup', 'add-to-shopping-cart');
     }
 
@@ -131,12 +132,33 @@ class ProductController extends Controller
 
     public function addManualExistingProductShoppingList(int $id)
     {
-        $product = Product::find($id);
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->get(config('app.api_base_url') . '/Products/' . $id);
+
         if (!$product) {
             return redirect('/');
         }
 
-        \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->attach($id, ['is_active' => 1]);
+        $accountId = Account::$accountEntity->id;
+        $productId = $product['id'];
+
+        Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
+
+        Session::flash('type', 'success');
+
+        return redirect('/');
+    }
+
+    public function addManualProductShoppingList(StoreProductManualRequest $request)
+    {
+        $product = Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->post(config('app.api_base_url') . '/Products', [
+            'name' => $request->validated('name'),
+        ]);
+
+        $product = $product->json();
+        $accountId = Account::$accountEntity->id;
+        $productId = $product['id'];
+
+        Http::withoutVerifying()->withHeaders(['x-api-key' => Account::$accountEntity->token])->put(config('app.api_base_url') . "/Accounts/{$accountId}/FixedProducts/{$productId}/RanOut");
 
         Session::flash('type', 'success');
 
