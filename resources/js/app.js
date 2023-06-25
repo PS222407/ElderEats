@@ -129,6 +129,7 @@ Echo.channel('user-account-requests-' + account)
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.post('/account/attach-user', {
+                    _token: csrf,
                     userId: e.userId,
                 })
                 .then(function (response) {

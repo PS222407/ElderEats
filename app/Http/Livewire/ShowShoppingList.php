@@ -7,6 +7,8 @@ use App\Classes\Account;
 
 class ShowShoppingList extends Component
 {
+    protected $listeners = ['refreshComponent' => '$refresh'];
+
     public function render()
     {
         $products =  \App\Models\Account::find(Account::$accountEntity->id)->shoppingListWithoutTimestamps()->get();
